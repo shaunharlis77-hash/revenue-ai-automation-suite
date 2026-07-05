@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 
+import { EmptyState } from "@/components/EmptyState";
+import { ErrorState } from "@/components/ErrorState";
 import { PageHeader } from "@/components/PageHeader";
 import { StatusBadge } from "@/components/StatusBadge";
 import { decideReviewItem, getReviewItems, type ReviewItem } from "@/lib/api";
@@ -29,17 +31,17 @@ export default async function ReviewQueuePage({
       {error ? <div className="notice errorNotice">{error}</div> : null}
 
       {loadError ? (
-        <section className="card detailPanel">
-          <p className="cardLabel">Backend unavailable</p>
-          <p>{loadError}</p>
-        </section>
+        <ErrorState
+          message="The review queue could not be loaded. Start the FastAPI backend and refresh this page."
+          detail={loadError}
+        />
       ) : null}
 
       {!loadError && items.length === 0 ? (
-        <section className="card detailPanel">
-          <p className="cardLabel">No review items</p>
-          <p>No workflow output is waiting for review right now.</p>
-        </section>
+        <EmptyState
+          title="No review items"
+          message="No workflow output is waiting for human decision right now. Run the demo seed journey or create a follow-up/proposal workflow to populate this queue."
+        />
       ) : null}
 
       {!loadError && items.length > 0 ? (
@@ -76,7 +78,7 @@ function ReviewItemCard({ item }: { item: ReviewItem }) {
         <div>
           <h2 className="reviewTitle">{item.title}</h2>
           <p className="reviewMeta">
-            {item.company || "Unknown company"} ·{" "}
+            {item.company || "Unknown company"} /{" "}
             {item.contact_name || "Unknown contact"}
           </p>
         </div>
@@ -164,7 +166,7 @@ function ReviewItemCard({ item }: { item: ReviewItem }) {
       ) : (
         <p className="decisionText">
           Decision: {item.decision || item.status}
-          {item.decision_reason ? ` · ${item.decision_reason}` : ""}
+          {item.decision_reason ? ` / ${item.decision_reason}` : ""}
         </p>
       )}
     </article>

@@ -1,3 +1,5 @@
+import { EmptyState } from "@/components/EmptyState";
+import { ErrorState } from "@/components/ErrorState";
 import { PageHeader } from "@/components/PageHeader";
 import { StatusBadge } from "@/components/StatusBadge";
 import { getHubSpotStatus, type HubSpotStatus } from "@/lib/api";
@@ -16,10 +18,17 @@ export default async function HubSpotStatusPage() {
       />
 
       {loadError ? (
-        <section className="card detailPanel">
-          <p className="cardLabel">Backend unavailable</p>
-          <p>{loadError}</p>
-        </section>
+        <ErrorState
+          message="HubSpot adapter status could not be loaded. Start the backend and refresh this page."
+          detail={loadError}
+        />
+      ) : null}
+
+      {!loadError && !status ? (
+        <EmptyState
+          title="No HubSpot status"
+          message="The backend did not return adapter status. Check the API process and configuration."
+        />
       ) : null}
 
       {status ? (

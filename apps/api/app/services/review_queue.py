@@ -76,9 +76,44 @@ def create_review_item(request: ReviewItemCreate) -> ReviewItem:
             output_reference=item.review_item_id,
             guardrails_triggered=item.review_reasons,
             human_review_required=True,
-            metadata_json={"review_type": item.review_type},
+            metadata_json={
+                "review_type": item.review_type,
+                "review_item_id": item.review_item_id,
+                "crm_record_id": item.metadata_json.get("crm_record_id"),
+                "status": "recommended",
+            },
         )
     )
+    try:
+        from app.services.notifications import create_review_notification
+
+        notification = create_review_notification(item)
+        if notification is not None:
+            log_step_success(
+                item.workflow_run_id or f"review:{item.review_item_id}",
+                item.workflow_name,
+                "review_notification_create",
+                entity_type=item.entity_type,
+                entity_id=item.entity_id,
+                metadata_json={
+                    "review_item_id": item.review_item_id,
+                    "notification_id": notification.notification_id,
+                    "delivery_status": notification.delivery_status,
+                },
+            )
+    except Exception as error:
+        log_step_failure(
+            item.workflow_run_id or f"review:{item.review_item_id}",
+            item.workflow_name,
+            "review_notification_create",
+            error,
+            entity_type=item.entity_type,
+            entity_id=item.entity_id,
+            failure_reason="Review item was created, but the review notification failed.",
+            retryable=True,
+            recommended_fix="Check notification persistence and n8n webhook configuration.",
+            metadata_json={"review_item_id": item.review_item_id},
+        )
     return item
 
 
@@ -223,6 +258,25 @@ def decide_review_item(
             entity_id,
             {"review_item_id": review_item_id, "decision": decision},
         )
+        if decision == "approved":
+            try:
+                from app.services.review_writeback import apply_review_approval_writeback
+
+                apply_review_approval_writeback(item, request.actor)
+            except Exception as writeback_error:
+                log_step_failure(
+                    workflow_run_id,
+                    workflow_name,
+                    "review_approved_crm_writeback",
+                    writeback_error,
+                    entity_type=entity_type,
+                    entity_id=entity_id,
+                    failure_reason="Review approval succeeded, but optional CRM writeback failed.",
+                    retryable=True,
+                    recommended_fix="Check review metadata and CRM adapter writeback for approved review items.",
+                    severity="warning",
+                    metadata_json={"review_item_id": review_item_id},
+                )
         log_step_success(
             workflow_run_id,
             workflow_name,

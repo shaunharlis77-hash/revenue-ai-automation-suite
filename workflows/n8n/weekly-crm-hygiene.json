@@ -1,0 +1,51 @@
+{
+  "name": "Weekly CRM Hygiene",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "weeksInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "weekly-schedule",
+      "name": "Weekly Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [220, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL || 'http://host.docker.internal:8000'}}/demo/full-story/run",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "reset_demo",
+              "value": "false"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "run-demo-hygiene",
+      "name": "Run Demo Hygiene Path",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 300]
+    }
+  ],
+  "connections": {
+    "Weekly Schedule": {
+      "main": [[{"node": "Run Demo Hygiene Path", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "phase-7-weekly-hygiene"
+}

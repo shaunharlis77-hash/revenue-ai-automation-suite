@@ -1,56 +1,56 @@
 export const overviewMetrics = [
   {
-    label: "Placeholder Workflows",
-    value: "9",
-    note: "Planned sales operations areas, not active automations.",
+    label: "Backend workflows",
+    value: "5",
+    note: "Deterministic workflows with audit and operational logs.",
   },
   {
-    label: "Review Required",
-    value: "100%",
-    note: "Future AI outputs should route through human approval.",
+    label: "Human review layer",
+    value: "Live",
+    note: "Review queue supports approval and rejection decisions.",
   },
   {
-    label: "External API Calls",
-    value: "0",
-    note: "This foundation does not connect to live systems.",
+    label: "CRM adapter",
+    value: "Mock/HubSpot",
+    note: "Mock remains safe by default; HubSpot sandbox is env controlled.",
   },
   {
-    label: "CRM Writes",
-    value: "0",
-    note: "HubSpot write-back is intentionally not implemented yet.",
+    label: "Guardrails",
+    value: "Required",
+    note: "Audit trail and operational logs are mandatory for workflows.",
   },
 ];
 
 export const workflowCards = [
   {
     title: "Lead Scoring",
-    status: "planned",
+    status: "ready",
     description:
-      "Future scoring support for prioritizing sales follow-up using transparent signals.",
+      "Deterministic scoring support for prioritizing sales follow-up using transparent signals.",
   },
   {
     title: "Meeting Summaries",
-    status: "draft",
+    status: "ready",
     description:
-      "Future summary workspace for sales calls, next steps, and customer context.",
+      "Structured summary workspace for sales calls, next steps, and customer context.",
   },
   {
     title: "Follow-Up Drafts",
-    status: "review",
+    status: "ready",
     description:
-      "Future assisted drafting with human approval before anything reaches a customer.",
+      "Assisted drafting with human approval before anything reaches a customer.",
   },
   {
     title: "CRM Hygiene",
-    status: "planned",
+    status: "ready",
     description:
-      "Future checks for stale fields, missing lifecycle data, and duplicate cleanup.",
+      "Read-only checks for stale fields, missing lifecycle data, and deal risk.",
   },
   {
     title: "Proposal Drafts",
-    status: "draft",
+    status: "ready",
     description:
-      "Future proposal support using approved messaging and deal context.",
+      "Proposal outline support using approved guardrails and deal context.",
   },
   {
     title: "Knowledge Base",

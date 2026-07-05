@@ -176,9 +176,42 @@ def initialize_database(connection: sqlite3.Connection) -> None:
             created_at TEXT NOT NULL,
             metadata_json TEXT
         );
+
+        CREATE TABLE IF NOT EXISTS notification_events (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            notification_id TEXT UNIQUE NOT NULL,
+            notification_type TEXT NOT NULL DEFAULT 'workflow_step_failed',
+            workflow_run_id TEXT NOT NULL,
+            workflow_name TEXT NOT NULL,
+            step_name TEXT NOT NULL,
+            severity TEXT NOT NULL,
+            error_type TEXT,
+            safe_error_message TEXT,
+            retryable INTEGER NOT NULL DEFAULT 0,
+            recommended_fix TEXT,
+            entity_type TEXT,
+            entity_id TEXT,
+            crm_record_id TEXT,
+            review_item_id TEXT,
+            recipient_role TEXT NOT NULL DEFAULT 'admin_ops',
+            recipient_id TEXT,
+            recipient_name TEXT,
+            recipient_email TEXT,
+            routed_owner_id TEXT,
+            routed_owner_name TEXT,
+            manager_fallback_used INTEGER NOT NULL DEFAULT 0,
+            title TEXT NOT NULL DEFAULT 'Workflow notification',
+            message TEXT NOT NULL DEFAULT '',
+            recommended_action TEXT,
+            delivery_status TEXT NOT NULL,
+            webhook_configured INTEGER NOT NULL DEFAULT 0,
+            created_at TEXT NOT NULL,
+            metadata_json TEXT
+        );
         """
     )
     ensure_crm_lead_record_columns(connection)
+    ensure_notification_event_columns(connection)
     connection.commit()
 
 
@@ -206,6 +239,33 @@ def ensure_crm_lead_record_columns(connection: sqlite3.Connection) -> None:
             )
 
 
+def ensure_notification_event_columns(connection: sqlite3.Connection) -> None:
+    existing_columns = {
+        row["name"]
+        for row in connection.execute("PRAGMA table_info(notification_events)").fetchall()
+    }
+    required_columns = {
+        "notification_type": "TEXT NOT NULL DEFAULT 'workflow_step_failed'",
+        "crm_record_id": "TEXT",
+        "review_item_id": "TEXT",
+        "recipient_role": "TEXT NOT NULL DEFAULT 'admin_ops'",
+        "recipient_id": "TEXT",
+        "recipient_name": "TEXT",
+        "recipient_email": "TEXT",
+        "routed_owner_id": "TEXT",
+        "routed_owner_name": "TEXT",
+        "manager_fallback_used": "INTEGER NOT NULL DEFAULT 0",
+        "title": "TEXT NOT NULL DEFAULT 'Workflow notification'",
+        "message": "TEXT NOT NULL DEFAULT ''",
+        "recommended_action": "TEXT",
+    }
+    for column_name, column_definition in required_columns.items():
+        if column_name not in existing_columns:
+            connection.execute(
+                f"ALTER TABLE notification_events ADD COLUMN {column_name} {column_definition}"
+            )
+
+
 def encode_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=True)
 
@@ -218,6 +278,7 @@ def decode_json(value: str | None, fallback: Any) -> Any:
 
 def reset_persistence_tables() -> None:
     with get_connection() as connection:
+        connection.execute("DELETE FROM notification_events")
         connection.execute("DELETE FROM crm_activities")
         connection.execute("DELETE FROM crm_lead_records")
         connection.execute("DELETE FROM workflow_step_events")

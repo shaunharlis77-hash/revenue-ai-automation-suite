@@ -1,0 +1,54 @@
+{
+  "name": "Lead Intake To Revenue AI API",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "revenue-ai/lead-intake",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "lead-intake-webhook",
+      "name": "Lead Form Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL || 'http://host.docker.internal:8000'}}/intake/lead",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json.body || $json}}",
+        "options": {}
+      },
+      "id": "post-lead-intake",
+      "name": "POST Lead Intake API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}"
+      },
+      "id": "return-api-result",
+      "name": "Return Lead Intake Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [780, 300]
+    }
+  ],
+  "connections": {
+    "Lead Form Webhook": {
+      "main": [[{"node": "POST Lead Intake API", "type": "main", "index": 0}]]
+    },
+    "POST Lead Intake API": {
+      "main": [[{"node": "Return Lead Intake Result", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "phase-7-lead-intake"
+}

@@ -158,6 +158,32 @@ Review Queue answers: what needs a human decision? Audit Trail answers: what hap
 
 This matters because a sales leader needs confidence that guardrails and approvals are visible, while a system owner needs enough failure detail to fix a workflow without digging through raw logs.
 
+## How I explain the polished product UI
+
+After the backend, audit, review, CRM, and dashboard layers were working, I did a suite-wide UI polish pass so the project feels like one product instead of separate test screens.
+
+The Sales Manager Dashboard uses business language: lead volume, safe updates, review load, time saved, drop-off zones, and revenue activity. The Admin Dashboard stays more technical: workflow health, failed steps, HubSpot sync health, guardrails, and recommended fixes.
+
+The navigation keeps the core operating model visible: workflows create outputs, the Review Queue handles human decisions, the Audit Trail records business traceability, Operational Logs support maintenance, and CRM/HubSpot pages show source-of-truth boundaries.
+
+This matters in an interview because it shows the project is not only technically wired. It is demo-ready for sales leaders, RevOps owners, and system maintainers without hiding the guardrails.
+
+## How I explain Phase 7
+
+Phase 7 completes the interview demo story by following one lead from first touch to pipeline management.
+
+The flow starts with Lead Intake, then enriches, scores, routes, and writes safe CRM fields. A meeting is attached to the CRM record, meeting notes become a CRM-ready summary, follow-up and proposal drafts go through human review, approved items write CRM activity, follow-up outcomes are captured, and CRM hygiene monitors the deal for risk.
+
+The backend remains the AI decisioning and workflow policy layer. HubSpot or the mock CRM adapter remains the CRM source of truth. n8n orchestrates events, webhooks, scheduled checks, review approvals, and failure notifications, but it does not contain the core business logic.
+
+Every meaningful action still writes audit events and operational step events, so the demo can show both governance and maintainability. Failed workflow steps also create safe notification events, either queued locally or posted to an n8n webhook when configured.
+
+Review-required work also creates notification records. If a lead or deal has an assigned owner, the notification is routed to that owner or routed rep. If no owner is available, the system creates a manager fallback notification so risky work does not sit silently in the queue.
+
+For dashboard presentation, I separate the real proof record from the volume history. I can run one full demo story with HubSpot enabled to prove the real CRM adapter path, then seed 30-40 local synthetic records in forced mock mode so the Sales Manager and Admin dashboards show meaningful trends.
+
+That avoids creating dozens of fake HubSpot records while still using the real persisted database tables the dashboards read from: CRM records, audit events, review items, workflow steps, notifications, and workflow runs. In production, those dashboard metrics would come from real CRM and workflow history instead of seed data.
+
 ## How I explain the mock CRM adapter
 
 Before adding real HubSpot, I added a mock CRM adapter around the local CRM-style records.
@@ -181,6 +207,18 @@ Every meaningful HubSpot step writes audit events and operational step events, s
 Phase 5 is now functionally verified in a real HubSpot sandbox. Property setup completed, the no-network mapping/config tests passed, local mock-mode tests stayed isolated from HubSpot, and the real smoke test created the expected contact, company, deal, task, and note records.
 
 I also hardened the adapter around real HubSpot validation details. Standard company fields are normalized before sync, task payloads include HubSpot-required fields, and optional activity failures do not erase successful contact, company, or deal sync. This keeps the integration practical without weakening the review and guardrail model.
+
+## How I explain Phase 6 dashboards
+
+Phase 6 adds two dashboard layers because sales leaders and system owners need different views.
+
+The Sales Manager Dashboard translates AI workflow usage into business outcomes: lead flow, high-priority leads, drop-off zones, follow-up and proposal assistance, AI adoption, estimated time saved, pipeline health, and sales execution risks. It avoids raw technical detail so a manager can understand the sales story quickly.
+
+The Admin / Operations Dashboard is for RevOps and AI operations. It shows review queue health, audit events, guardrails, workflow reliability, operational failures, HubSpot sync health, and recommended fixes.
+
+This separation is important for the demo. A sales manager sees whether AI is improving execution, while an operator sees whether the system is healthy, observable, and safe to maintain.
+
+The metrics use persisted backend data. If the current system does not yet store rep-level attribution or a specific stage linkage, the dashboard says `not_enough_data` instead of inventing numbers.
 
 ## How I explain non-negotiable audit and observability
 

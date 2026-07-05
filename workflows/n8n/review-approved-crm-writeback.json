@@ -1,0 +1,54 @@
+{
+  "name": "Review Approved CRM Writeback",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "revenue-ai/review-approved",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "review-approved-webhook",
+      "name": "Review Approved Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [220, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{($env.API_BASE_URL || 'http://host.docker.internal:8000') + '/review/items/' + ($json.body.review_item_id || $json.review_item_id) + '/approve'}}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { actor: $json.body.actor || 'n8n', decision_reason: $json.body.decision_reason || 'Approved through n8n review workflow.' } }}",
+        "options": {}
+      },
+      "id": "approve-review",
+      "name": "Approve Review In Backend",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}"
+      },
+      "id": "return-review",
+      "name": "Return Review Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [790, 300]
+    }
+  ],
+  "connections": {
+    "Review Approved Webhook": {
+      "main": [[{"node": "Approve Review In Backend", "type": "main", "index": 0}]]
+    },
+    "Approve Review In Backend": {
+      "main": [[{"node": "Return Review Result", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "phase-7-review-approved"
+}

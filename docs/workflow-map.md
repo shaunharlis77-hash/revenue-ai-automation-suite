@@ -2,17 +2,71 @@
 
 ## Current Workflow Areas
 
-The dashboard includes placeholders for:
+The frontend suite now separates the product into clear operating areas:
 
-- Overview
-- Lead Scoring
-- Meeting Summaries
-- Follow-Up Drafts
-- CRM Hygiene
-- Proposal Drafts
-- Sales Knowledge Base
-- Impact Metrics
-- Human Review Queue
+- Dashboards: Sales Manager Dashboard, Admin Dashboard, and Overview.
+- Workflows: Lead Intake, Lead Scoring, Meeting Summaries, Follow-Up Drafts, Proposal Drafts, CRM Hygiene, and Sales Knowledge Base.
+- CRM: CRM Records and HubSpot Status.
+- Governance: Review Queue and Audit Trail.
+- Operations: Operational Logs and Impact Metrics.
+
+The admin side intentionally keeps three separate views:
+
+- Review Queue: the human decision layer.
+- Audit Trail: business and governance traceability.
+- Operational Logs: step-level maintenance and failure diagnosis.
+
+CRM Records and HubSpot Status show the CRM/source-of-truth boundary, adapter mode, sync status, safe write-back behavior, and token-safe configuration status.
+
+## Phase 7 Demo Story Flow
+
+Phase 7 completes the interview demo by following one lead from first touch to pipeline management.
+
+The demo story now covers:
+
+1. A lead enters through Lead Intake.
+2. The backend enriches, scores, routes, and writes safe CRM fields.
+3. A meeting is attached to the CRM record.
+4. Meeting notes are summarized into a CRM-ready note and next-step plan.
+5. Review-required actions create review items.
+6. A follow-up draft is prepared and approved through the Review Queue.
+7. Approval writes a CRM activity and keeps the draft customer-facing but unsent.
+8. Follow-up outcome is captured and written back as CRM activity.
+9. A proposal/package outline is prepared, approved, and recorded as CRM activity.
+10. CRM hygiene checks the deal for stale activity, missing owner, missing next step, and risk.
+11. Risky items create review visibility.
+12. Review-required items create safe notification events for the assigned owner, routed rep, or manager fallback.
+13. Failed workflow steps create safe notification events for admin/ops.
+14. Dashboards use persisted workflow, audit, review, CRM, activity, step, and notification records.
+
+FastAPI remains the decisioning layer. HubSpot or the mock CRM adapter remains the source of truth for CRM-style records and activity. n8n orchestrates incoming webhooks, review approvals, scheduled hygiene checks, demo setup, and failure notifications.
+
+## n8n Orchestration
+
+Importable n8n workflow JSON files live in `workflows/n8n/`.
+
+The current exports are:
+
+- `lead-intake-to-api.json`.
+- `meeting-completed-to-summary.json`.
+- `review-approved-crm-writeback.json`.
+- `weekly-crm-hygiene.json`.
+- `workflow-failure-notification.json`.
+- `full-demo-story-orchestrator.json`.
+
+n8n should call the backend API and pass event payloads. It should not own scoring, summarization, routing, review policy, CRM writeback policy, audit trail, or operational diagnostics.
+
+## Notification Rules
+
+Notifications are durable local records and may be sent to n8n only when `N8N_FAILURE_WEBHOOK_URL` is configured.
+
+- Review items with an assigned owner or routed rep create `review_required` notifications for that owner/rep.
+- Review items without an assigned owner create `review_assignment_needed` notifications for the manager.
+- Risky sales items without an owner use manager fallback and recommend assigning an owner.
+- Failed workflow steps create `workflow_step_failed` notifications for admin/ops.
+- Notification records must not include secrets, webhook URLs, HubSpot tokens, or private credentials.
+- Review notifications create audit events and workflow step events.
+- Manager fallback notifications create explicit `manager_fallback_notification_created` audit events.
 
 ## Future Workflow Pattern
 
@@ -451,7 +505,21 @@ Every existing workflow now records step-level events for its main operational p
 
 ## Admin UI Layer
 
-The first visible product layer includes Lead Intake, CRM Records, Review Queue, Audit Trail, and Operational Logs screens.
+The visible product layer includes Lead Intake, CRM Records, Review Queue, Audit Trail, Operational Logs, Sales Manager Dashboard, and Admin / Operations Dashboard screens.
+
+### Sales Manager Dashboard
+
+The Sales Manager Dashboard is business-facing. It translates AI workflow usage into sales execution signals: lead volume, high-priority leads, CRM update outcomes, open review work, follow-up and proposal assistance, estimated time saved, drop-off zones, AI adoption, and sales execution risks.
+
+It intentionally avoids raw technical diagnostics. If an operational issue affects sales outcomes, it is summarized in manager language, such as CRM sync needs attention, proposal waiting for review, or records missing next steps.
+
+The dashboard uses persisted backend data. If rep-level attribution, follow-up due dates, or stage-level linkage is not available yet, the API returns `not_enough_data` instead of inventing metrics.
+
+### Admin / Operations Dashboard
+
+The Admin / Operations Dashboard is diagnostic. It shows adapter mode, HubSpot configuration status, workflow run health, review queue health, audit health, operational step health, HubSpot sync health, workflow health, recent failures, recommended fixes, and quick links to the operational views.
+
+This dashboard is where RevOps admins and system maintainers should look for failures, guardrails, retryability, sync errors, and maintenance actions.
 
 The Lead Intake screen lets a user submit a synthetic inbound lead and see enrichment, scoring, routing, CRM update status, and review visibility.
 
@@ -463,7 +531,7 @@ The Audit Trail shows durable workflow events, guardrail triggers, review decisi
 
 The Operational Logs screen shows workflow step events for maintenance. It helps a system owner see which step ran, which step failed, why it failed, whether it is retryable, and what to check next.
 
-This layer is intentionally simple and internal. It does not add authentication yet, and it does not connect to HubSpot or n8n.
+This layer is intentionally simple and internal. It does not add authentication yet, and dashboards do not require HubSpot to be enabled.
 
 ## Mock CRM Adapter Layer
 

@@ -1,0 +1,54 @@
+{
+  "name": "Meeting Completed To CRM Summary",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "revenue-ai/meeting-completed",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "meeting-webhook",
+      "name": "Meeting Completed Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [220, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{($env.API_BASE_URL || 'http://host.docker.internal:8000') + '/demo/records/' + ($json.body.crm_record_id || $json.crm_record_id) + '/meeting'}}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json.body || $json}}",
+        "options": {}
+      },
+      "id": "post-meeting",
+      "name": "Attach Meeting And Summarize",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}"
+      },
+      "id": "return-summary",
+      "name": "Return Summary Writeback Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [790, 300]
+    }
+  ],
+  "connections": {
+    "Meeting Completed Webhook": {
+      "main": [[{"node": "Attach Meeting And Summarize", "type": "main", "index": 0}]]
+    },
+    "Attach Meeting And Summarize": {
+      "main": [[{"node": "Return Summary Writeback Result", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "phase-7-meeting-summary"
+}

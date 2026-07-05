@@ -76,7 +76,7 @@ def log_step_failure(
     timestamp = utc_now()
     error_message = str(error)
     error_type = type(error).__name__ if isinstance(error, Exception) else "Error"
-    return create_step_event(
+    event = create_step_event(
         workflow_run_id=workflow_run_id,
         workflow_name=workflow_name,
         step_name=step_name,
@@ -96,6 +96,14 @@ def log_step_failure(
         or "Check the workflow input, database availability, and related audit or review write path.",
         metadata_json=metadata_json or {},
     )
+    if event is not None:
+        try:
+            from app.services.notifications import handle_failed_step_event
+
+            handle_failed_step_event(event)
+        except Exception:
+            pass
+    return event
 
 
 def log_step_skipped(

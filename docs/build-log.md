@@ -2,6 +2,113 @@
 
 ## 2026-07-05
 
+### Phase 7: Full Demo Story and n8n Orchestration
+
+Completed the end-to-end interview demo story and added n8n orchestration exports.
+
+Implemented:
+
+- Full demo story runner that follows one synthetic lead from first touch through pipeline management.
+- Meeting/call CRM attachment through `POST /demo/records/{crm_record_id}/meeting`.
+- Meeting summary CRM writeback using the existing deterministic meeting summary workflow.
+- Follow-up approval writeback through the existing review approval route when review items include CRM context.
+- Follow-up outcome capture through `POST /demo/records/{crm_record_id}/follow-up-outcome`.
+- Proposal/package outline approval writeback and proposal status activity in the demo story runner.
+- CRM hygiene demo run that creates review visibility for risky records.
+- Failure notification layer that queues locally when `N8N_FAILURE_WEBHOOK_URL` is not configured and posts safe payloads when it is configured.
+- Review notification layer for review-required items, including assigned-owner routing and manager fallback when no owner is available.
+- Notification routes at `GET /notifications`, `GET /notifications/recent`, and `POST /notifications/test-failure`.
+- Importable n8n JSON workflows for lead intake, meeting completion, review approval writeback, weekly hygiene/demo orchestration, workflow failure notification, and full demo story orchestration.
+- Dashboard-ready data seeding through persisted CRM records, CRM activities, audit events, review items, workflow runs, workflow step events, and notification events.
+- Added `scripts/test_demo_story_runner.py` and `scripts/test_failure_notifications.py`.
+
+Guardrails preserved:
+
+- FastAPI remains the business logic and AI decisioning layer.
+- HubSpot/mock CRM remains the CRM source of truth.
+- n8n orchestrates events and schedules but does not hold core workflow logic.
+- Audit trail and operational observability remain mandatory.
+- Notification payloads exclude secrets and tokens.
+- Review notifications write audit events and workflow step events.
+- Manager fallback notifications write explicit fallback audit metadata.
+- No Postgres migration, authentication, LangGraph, n8n business logic, or customer-facing auto-send behavior was added.
+
+### Phase 7: Dashboard Demo History Seed
+
+Added a lightweight local dashboard history seed for interview presentation.
+
+Implemented:
+
+- `scripts/seed_dashboard_demo_data.py` for 30-40 synthetic local CRM/demo records.
+- Forced mock/local CRM mode inside the bulk seed path so HubSpot is not called even when `.env` is configured for HubSpot.
+- Varied synthetic lead/deal journeys across high, medium, low, and blocked/risky cases.
+- Persisted CRM records, workflow runs, audit events, workflow step events, review items, review decisions, notifications, and CRM activity history.
+- Review-required examples with assigned owner/routed rep notifications and manager fallback notifications.
+- Follow-up drafts, proposal outlines, CRM hygiene risk findings, approved reviews, rejected reviews, partial/failed mock sync metadata, missing next-step examples, and a controlled operational failure notification.
+- `scripts/test_dashboard_demo_seed.py` to verify seeded persistence, dashboard metrics, mock mode, notifications, and secret-safe output.
+
+Demo setup:
+
+- Run one real proof journey with HubSpot enabled through `python scripts/run_full_demo_story.py --reset-demo`.
+- Then seed local synthetic dashboard history with `python scripts/seed_dashboard_demo_data.py --count 40`.
+- HubSpot remains the CRM source of truth for the real proof record.
+- Bulk dashboard history is local synthetic data only; production would use real CRM and workflow history.
+
+No real HubSpot records, secrets, external API calls, frontend-only fake metrics, or dashboard contract changes were added.
+
+### Phase 6B: Suite-Wide UI Polish Pass
+
+Polished the frontend suite so the dashboards, workflow pages, CRM pages, governance pages, and operational pages feel like one coherent Revenue AI / Sales AI Ops product.
+
+Included:
+
+- Updated the global visual system with calmer SaaS spacing, typography, cards, badges, tables, forms, loading states, empty states, and error states.
+- Added active sidebar navigation while preserving grouped navigation for Dashboards, Workflows, CRM, Governance, and Operations.
+- Added reusable UI primitives for sidebar navigation, detail cards, and loading states.
+- Improved page headers and placeholder workflow pages so they explain current behavior, guardrails, and review boundaries in plain language.
+- Polished Sales Manager Dashboard metric emphasis and Admin Dashboard operational risk emphasis.
+- Improved Review Queue, Audit Trail, Operational Logs, CRM Records, Lead Intake, HubSpot Status, Impact Metrics, and Sales Knowledge Base demo readability.
+- Updated visible Lead Intake demo defaults to valid-looking synthetic business domains.
+- Preserved the product distinction between Review Queue, Audit Trail, Operational Logs, and CRM/HubSpot source-of-truth views.
+
+No backend workflow logic, API response contracts, HubSpot guardrails, n8n integration, LangGraph integration, secrets, or audit/observability requirements were changed.
+
+### Phase 6: Sales Manager and Admin Dashboards
+
+Implemented two dashboard layers with a controlled frontend polish pass.
+
+Implemented:
+
+- Sales Manager Dashboard added.
+- Admin / Operations Dashboard added.
+- Sales manager metrics API added at `GET /metrics/sales-manager-dashboard`.
+- Admin metrics API added at `GET /metrics/admin-dashboard`.
+- Sales performance and pipeline health summaries.
+- Drop-off zone stats.
+- Team AI adoption and usage metrics.
+- Rep-level AI usage reporting where attribution data exists, with `not_enough_rep_level_data` returned when attribution is unavailable.
+- AI impact and estimated time saved.
+- Sales execution risk visibility.
+- CRM and HubSpot sync visibility.
+- Guardrail visibility.
+- Operational health visibility.
+- Frontend UI polish pass with grouped navigation, clearer dashboard hierarchy, reusable dashboard UI components, readable tables, and improved empty/error states.
+- Audit and observability layers remain mandatory acceptance criteria.
+
+Metric policy:
+
+- Metrics use persisted backend data from workflow runs, audit events, review items, workflow step events, CRM records, and CRM activities.
+- Metrics that cannot be calculated from current persisted data return `not_enough_data` instead of invented values.
+- Time saved is labeled as estimated.
+- No tokens or secrets are returned.
+
+Added tests:
+
+- `scripts/test_sales_manager_dashboard_metrics.py`.
+- `scripts/test_admin_dashboard_metrics.py`.
+
+No workflow logic, HubSpot guardrails, mock mode behavior, n8n automation, LangGraph integration, auth, or secret handling was weakened.
+
 ### Phase 5: HubSpot Sandbox Integration verified
 
 Completed the Phase 5 HubSpot sandbox integration lock.

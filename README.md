@@ -12,6 +12,8 @@ The project is a working foundation for an internal sales operations automation 
 
 - Deterministic backend workflows are implemented and tested.
 - Review Queue, Audit Trail, Operational Logs, Lead Intake, CRM Records, and HubSpot Status UI layers are available.
+- Sales Manager Dashboard and Admin / Operations Dashboard are available.
+- The frontend has a suite-wide polish pass with grouped active navigation, consistent page headers, improved dashboard cards, readable tables, and intentional empty/error/loading states.
 - Mock CRM adapter remains the default local mode.
 - Optional HubSpot sandbox adapter is functionally verified.
 - Business audit trail and operational observability are mandatory for every workflow and integration.
@@ -69,7 +71,15 @@ POST /logs/ai-action
 
 GET  /audit/events
 GET  /review/items
+GET  /notifications
+GET  /notifications/recent
+POST /notifications/test-failure
+POST /demo/records/{crm_record_id}/meeting
+POST /demo/records/{crm_record_id}/follow-up-outcome
+POST /demo/full-story/run
 GET  /metrics/dashboard
+GET  /metrics/sales-manager-dashboard
+GET  /metrics/admin-dashboard
 ```
 
 `POST /ai/score-lead` now returns deterministic lead scoring output. The remaining `/ai/*`, `/logs`, and `/metrics` endpoints return placeholder JSON only. None of these endpoints call HubSpot, write CRM data, use LLMs, or contact external services.
@@ -161,6 +171,81 @@ http://localhost:3000/audit-trail
 http://localhost:8000/audit/events
 http://localhost:8000/review/items
 http://localhost:8000/logs/workflow-steps
+```
+
+## Phase 7 Full Demo Story
+
+To run the complete interview story from lead intake through meeting summary, follow-up approval, proposal approval, CRM hygiene, audit events, operational logs, review items, and failure notifications:
+
+```bash
+cd apps/api
+python scripts/run_full_demo_story.py --reset-demo
+```
+
+The runner prints a token-safe summary with the demo run id, CRM record id, lead score, route, review item ids, follow-up outcome, proposal status, hygiene status, audit event count, workflow step count, review item count, and notification count.
+
+n8n importable workflow JSON files are in:
+
+```text
+workflows/n8n/
+```
+
+Set this n8n environment variable when running n8n in Docker on the same machine:
+
+```text
+API_BASE_URL=http://host.docker.internal:8000
+```
+
+FastAPI remains the business logic layer. n8n orchestrates webhooks, schedules, review approvals, demo setup, and failure notifications.
+
+Notification behavior:
+
+- Review-required work creates notification records for the assigned owner/routed rep, or manager fallback when no owner is available.
+- Failed workflow steps create admin/ops notification records.
+- Without `N8N_FAILURE_WEBHOOK_URL`, notifications are stored locally with `delivery_status=queued_no_webhook`.
+- Notification records and payloads must not expose webhook URLs, HubSpot tokens, or secrets.
+
+Phase 7 checks:
+
+```bash
+cd apps/api
+python scripts/test_demo_story_runner.py
+python scripts/test_failure_notifications.py
+```
+
+## Dashboard Demo History Seed
+
+For interview demos, use two data paths:
+
+1. Run one real proof journey with HubSpot enabled:
+
+```bash
+cd apps/api
+python scripts/run_full_demo_story.py --reset-demo
+```
+
+2. Seed local synthetic dashboard history without calling HubSpot:
+
+```bash
+python scripts/seed_dashboard_demo_data.py --count 40
+```
+
+The full demo story can prove the real CRM adapter path. The dashboard seed forces mock/local CRM mode and creates synthetic persisted history for the Sales Manager Dashboard and Admin Dashboard, including leads, safe CRM updates, review items, approvals, rejections, workflow steps, audit events, notifications, partial/failed mock sync examples, and operational diagnostics.
+
+HubSpot remains the CRM source of truth for the real proof record. Bulk dashboard history is local synthetic data only; production would use real CRM and workflow history instead of seed data.
+
+Optional local reset:
+
+```bash
+python scripts/seed_dashboard_demo_data.py --reset-demo --count 40
+```
+
+Seed verification:
+
+```bash
+python scripts/test_dashboard_demo_seed.py
+python scripts/test_sales_manager_dashboard_metrics.py
+python scripts/test_admin_dashboard_metrics.py
 ```
 
 ## Phase 4: Mock CRM Adapter and CRM Records
@@ -286,6 +371,29 @@ HubSpot hardening:
 - Task payloads include required HubSpot task fields.
 - Optional activity failures preserve core contact, company, and deal sync.
 - Tokens are never returned or logged.
+
+## Phase 6: Sales Manager and Admin Dashboards
+
+Phase 6 adds two distinct dashboard layers:
+
+- Sales Manager Dashboard: business-facing sales execution, AI adoption, drop-off zones, pipeline health, and estimated time saved.
+- Admin / Operations Dashboard: review queue health, audit health, workflow health, operational failures, HubSpot sync health, and recommended fixes.
+
+Frontend pages:
+
+```text
+http://localhost:3000/dashboard
+http://localhost:3000/admin-dashboard
+```
+
+Backend routes:
+
+```text
+GET /metrics/sales-manager-dashboard
+GET /metrics/admin-dashboard
+```
+
+Dashboard metrics use persisted backend data. If a metric cannot be calculated from the current data model, the API returns a clear `not_enough_data` state instead of inventing numbers.
 
 ## Acceptance Criteria
 

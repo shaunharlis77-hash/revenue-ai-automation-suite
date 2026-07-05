@@ -1,3 +1,4 @@
+import { LoadingState } from "@/components/LoadingState";
 import { PageHeader } from "@/components/PageHeader";
 import { StatusBadge } from "@/components/StatusBadge";
 
@@ -11,10 +12,10 @@ export default function CRMRecordsLoading() {
         description="Loading mock CRM adapter records and activity history."
         badge={<StatusBadge status="draft" />}
       />
-      <section className="card detailPanel">
-        <p className="cardLabel">Loading</p>
-        <p>Fetching CRM records from the local backend.</p>
-      </section>
+      <LoadingState
+        title="Loading CRM records"
+        message="Fetching internal CRM-style records and activity history."
+      />
     </div>
   );
 }

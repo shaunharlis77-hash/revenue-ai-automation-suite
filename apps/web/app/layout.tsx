@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
-import { navigationItems } from "@/lib/navigation";
+import { SidebarNav } from "@/components/SidebarNav";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -26,13 +25,7 @@ export default function RootLayout({
                 <p className="brandSubtle">Sales Ops Suite</p>
               </div>
             </div>
-            <nav className="navList">
-              {navigationItems.map((item) => (
-                <Link key={item.href} className="navLink" href={item.href}>
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+            <SidebarNav />
           </aside>
           <main className="content">{children}</main>
         </div>
@@ -40,4 +33,3 @@ export default function RootLayout({
     </html>
   );
 }
-

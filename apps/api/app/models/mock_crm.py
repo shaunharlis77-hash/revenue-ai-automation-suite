@@ -11,6 +11,14 @@ CRMActivityType = Literal[
     "crm_update_applied",
     "crm_update_blocked",
     "review_visibility_created",
+    "meeting_attached",
+    "meeting_summary_created",
+    "crm_task_created",
+    "follow_up_draft_approved",
+    "follow_up_outcome_captured",
+    "proposal_outline_approved",
+    "proposal_sent",
+    "hygiene_check_completed",
 ]
 CRMActivityStatus = Literal["created", "applied", "blocked", "info"]
 

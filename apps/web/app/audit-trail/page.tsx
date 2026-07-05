@@ -1,3 +1,5 @@
+import { EmptyState } from "@/components/EmptyState";
+import { ErrorState } from "@/components/ErrorState";
 import { PageHeader } from "@/components/PageHeader";
 import { StatusBadge } from "@/components/StatusBadge";
 import { getAuditEvents, type AuditEvent } from "@/lib/api";
@@ -15,17 +17,17 @@ export default async function AuditTrailPage() {
       />
 
       {loadError ? (
-        <section className="card detailPanel">
-          <p className="cardLabel">Backend unavailable</p>
-          <p>{loadError}</p>
-        </section>
+        <ErrorState
+          message="The audit trail could not be loaded. Start the backend and refresh this page."
+          detail={loadError}
+        />
       ) : null}
 
       {!loadError && events.length === 0 ? (
-        <section className="card detailPanel">
-          <p className="cardLabel">No audit events</p>
-          <p>No durable audit events have been recorded yet.</p>
-        </section>
+        <EmptyState
+          title="No audit events"
+          message="No durable business or governance events have been recorded yet. Run the demo seed journey to see decisions, guardrails, and CRM update events."
+        />
       ) : null}
 
       {!loadError && events.length > 0 ? (
@@ -60,7 +62,7 @@ function AuditEventCard({ event }: { event: AuditEvent }) {
         <div>
           <h2 className="reviewTitle">{formatLabel(event.event_type)}</h2>
           <p className="reviewMeta">
-            {formatDate(event.created_at)} · {formatLabel(event.workflow_name)}
+            {formatDate(event.created_at)} / {formatLabel(event.workflow_name)}
           </p>
         </div>
         <div className="badgeRow">
@@ -77,7 +79,7 @@ function AuditEventCard({ event }: { event: AuditEvent }) {
         <div>
           <dt>Entity</dt>
           <dd>
-            {formatLabel(event.entity_type)} · {event.entity_id}
+            {formatLabel(event.entity_type)} / {event.entity_id}
           </dd>
         </div>
         <div>

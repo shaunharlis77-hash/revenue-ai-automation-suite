@@ -1,0 +1,71 @@
+{
+  "name": "Full Demo Story Orchestrator",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Demo Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [220, 260]
+    },
+    {
+      "parameters": {
+        "path": "revenue-ai/full-demo-story",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Demo Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [220, 420]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.API_BASE_URL || 'http://host.docker.internal:8000'}}/demo/full-story/run",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "reset_demo",
+              "value": "={{$json.reset_demo || $json.body?.reset_demo || false}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "run-full-demo",
+      "name": "Run Full Demo Story API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [560, 340]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}"
+      },
+      "id": "return-demo-result",
+      "name": "Return Demo Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [830, 420]
+    }
+  ],
+  "connections": {
+    "Manual Demo Trigger": {
+      "main": [[{"node": "Run Full Demo Story API", "type": "main", "index": 0}]]
+    },
+    "Webhook Demo Trigger": {
+      "main": [[{"node": "Run Full Demo Story API", "type": "main", "index": 0}]]
+    },
+    "Run Full Demo Story API": {
+      "main": [[{"node": "Return Demo Result", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "phase-7-full-demo"
+}

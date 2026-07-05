@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 
+import { ErrorState } from "@/components/ErrorState";
 import { PageHeader } from "@/components/PageHeader";
 import { StatusBadge } from "@/components/StatusBadge";
 import {
@@ -34,10 +35,11 @@ export default async function LeadIntakePage({
 
       {error ? <div className="notice errorNotice">{error}</div> : null}
       {loadError ? (
-        <section className="card detailPanel">
-          <p className="cardLabel">Lead result unavailable</p>
-          <p>{loadError}</p>
-        </section>
+        <ErrorState
+          title="Lead result unavailable"
+          message="The submitted lead record could not be loaded from the backend."
+          detail={loadError}
+        />
       ) : null}
 
       <section className="leadIntakeLayout">
@@ -60,10 +62,10 @@ function LeadIntakeForm() {
         <div className="formGrid">
           <Field name="first_name" label="First name" defaultValue="Maya" />
           <Field name="last_name" label="Last name" defaultValue="Chen" />
-          <Field name="email" label="Email" defaultValue="maya.chen@northstaranalytics.example" required />
+          <Field name="email" label="Email" defaultValue="maya.chen@northstar-analytics.com" required />
           <Field name="company" label="Company" defaultValue="Northstar Analytics" required />
           <Field name="job_title" label="Job title" defaultValue="VP of Sales" />
-          <Field name="company_website" label="Company website" defaultValue="https://northstaranalytics.example" />
+          <Field name="company_website" label="Company website" defaultValue="https://northstar-analytics.com" />
           <Field name="company_size" label="Company size" defaultValue="201-500" />
           <Field name="industry" label="Industry" defaultValue="Analytics" />
           <Field name="region" label="Region" defaultValue="North America" />
@@ -140,7 +142,7 @@ function LeadResultPanel({ record }: { record: CRMLeadRecord | null }) {
           <p className="cardLabel">Result</p>
           <h2 className="sectionTitle">{record.company}</h2>
           <p className="reviewMeta">
-            {record.contact_name || "Unknown contact"} | {record.email}
+            {record.contact_name || "Unknown contact"} / {record.email}
           </p>
         </div>
         <div className="badgeRow">
@@ -172,13 +174,13 @@ function LeadResultPanel({ record }: { record: CRMLeadRecord | null }) {
       <div className="reviewBlock">
         <p className="cardLabel">CRM adapter</p>
         <p>
-          {formatLabel(record.adapter_mode)} mode | HubSpot sync:{" "}
+          {formatLabel(record.adapter_mode)} mode / HubSpot sync:{" "}
           {formatLabel(record.hubspot_sync_status)}
         </p>
         {record.hubspot_contact_id || record.hubspot_company_id || record.hubspot_deal_id ? (
           <p className="reviewMeta">
-            Contact {record.hubspot_contact_id || "not set"} | Company{" "}
-            {record.hubspot_company_id || "not set"} | Deal{" "}
+            Contact {record.hubspot_contact_id || "not set"} / Company{" "}
+            {record.hubspot_company_id || "not set"} / Deal{" "}
             {record.hubspot_deal_id || "not set"}
           </p>
         ) : null}
@@ -338,10 +340,10 @@ function presetRequest(preset: string): LeadIntakeRequest {
     return {
       first_name: "Maya",
       last_name: "Chen",
-      email: "maya.chen@northstaranalytics.example",
+      email: "maya.chen@northstar-analytics.com",
       company: "Northstar Analytics",
       job_title: "VP of Sales",
-      company_website: "https://northstaranalytics.example",
+      company_website: "https://northstar-analytics.com",
       company_size: "201-500",
       industry: "Analytics",
       region: "North America",
@@ -360,10 +362,10 @@ function presetRequest(preset: string): LeadIntakeRequest {
   return {
     first_name: "Nadia",
     last_name: "Patel",
-    email: "nadia.patel@localgrowth.example",
+    email: "nadia.patel@localgrowthstudio.com",
     company: "Local Growth Studio",
     job_title: "Operations Manager",
-    company_website: "https://localgrowth.example",
+    company_website: "https://localgrowthstudio.com",
     company_size: "51-200",
     industry: "Marketing Services",
     region: "EMEA",

@@ -1,4 +1,5 @@
 import { PageHeader } from "@/components/PageHeader";
+import { LoadingState } from "@/components/LoadingState";
 import { StatusBadge } from "@/components/StatusBadge";
 
 export default function OperationalLogsLoading() {
@@ -10,10 +11,10 @@ export default function OperationalLogsLoading() {
         description="Step-level workflow observability for failures, retries, and maintenance."
         badge={<StatusBadge status="ready" />}
       />
-      <section className="card detailPanel">
-        <p className="cardLabel">Loading</p>
-        <p>Loading workflow step events...</p>
-      </section>
+      <LoadingState
+        title="Loading operational logs"
+        message="Fetching step-level workflow diagnostics."
+      />
     </div>
   );
 }

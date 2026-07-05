@@ -1,3 +1,5 @@
+import { EmptyState } from "@/components/EmptyState";
+import { ErrorState } from "@/components/ErrorState";
 import { MetricCard } from "@/components/MetricCard";
 import { PageHeader } from "@/components/PageHeader";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -32,10 +34,10 @@ export default async function OperationalLogsPage({
       />
 
       {loadError ? (
-        <section className="card detailPanel">
-          <p className="cardLabel">Backend unavailable</p>
-          <p>{loadError}</p>
-        </section>
+        <ErrorState
+          message="Operational logs could not be loaded. Start the backend and refresh this page."
+          detail={loadError}
+        />
       ) : null}
 
       {!loadError ? (
@@ -96,20 +98,17 @@ export default async function OperationalLogsPage({
       ) : null}
 
       {!loadError && events.length === 0 ? (
-        <section className="card detailPanel">
-          <p className="cardLabel">No workflow step events</p>
-          <p>
-            No operational step events have been recorded yet. Run the demo seed
-            journey or execute a workflow to populate this page.
-          </p>
-        </section>
+        <EmptyState
+          title="No workflow step events"
+          message="No operational step events have been recorded yet. Run the demo seed journey or execute a workflow to populate this page."
+        />
       ) : null}
 
       {!loadError && events.length > 0 && visibleEvents.length === 0 ? (
-        <section className="card detailPanel">
-          <p className="cardLabel">No matching step events</p>
-          <p>No workflow step events match the current filter.</p>
-        </section>
+        <EmptyState
+          title="No matching step events"
+          message="No workflow step events match the current filter. Clear the filter or search by a different workflow run id."
+        />
       ) : null}
 
       {!loadError && visibleEvents.length > 0 ? (
@@ -121,13 +120,10 @@ export default async function OperationalLogsPage({
             </div>
 
             {failedEvents.length === 0 ? (
-              <article className="card detailPanel">
-                <p className="cardLabel">No failed steps</p>
-                <p>
-                  No failed workflow steps match the current view. Successful
-                  and skipped steps are still listed below.
-                </p>
-              </article>
+              <EmptyState
+                title="No failed steps"
+                message="No failed workflow steps match the current view. Successful and skipped steps are still listed below."
+              />
             ) : (
               <div className="operationalFailureList">
                 {failedEvents.map((event) => (
@@ -178,7 +174,7 @@ function FailureDiagnosticCard({ event }: { event: WorkflowStepEvent }) {
         <div>
           <h2 className="reviewTitle">{formatLabel(event.step_name)}</h2>
           <p className="reviewMeta">
-            {formatLabel(event.workflow_name)} | {formatDate(event.created_at)}
+            {formatLabel(event.workflow_name)} / {formatDate(event.created_at)}
           </p>
         </div>
         <div className="badgeRow">
@@ -190,7 +186,7 @@ function FailureDiagnosticCard({ event }: { event: WorkflowStepEvent }) {
 
       <dl className="reviewDetails operationalDetails">
         <Detail label="Workflow run" value={event.workflow_run_id} />
-        <Detail label="Entity" value={`${event.entity_type || "unknown"} | ${event.entity_id || "unknown"}`} />
+        <Detail label="Entity" value={`${event.entity_type || "unknown"} / ${event.entity_id || "unknown"}`} />
         <Detail label="Error type" value={event.error_type || "Not provided"} />
         <Detail label="Retryable" value={event.retryable ? "Yes" : "No"} />
       </dl>
@@ -212,7 +208,7 @@ function StepEventCard({ event }: { event: WorkflowStepEvent }) {
           <p className="reviewMeta">{formatDate(event.created_at)}</p>
           <h2 className="reviewTitle">{formatLabel(event.step_name)}</h2>
           <p className="reviewMeta">
-            {formatLabel(event.workflow_name)} | {event.workflow_run_id}
+            {formatLabel(event.workflow_name)} / {event.workflow_run_id}
           </p>
         </div>
         <div className="badgeRow">

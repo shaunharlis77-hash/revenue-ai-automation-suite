@@ -189,6 +189,55 @@ export type HubSpotStatus = {
   status: string;
 };
 
+export type NotEnoughData = {
+  status: "not_enough_data";
+  reason: string;
+};
+
+export type DropOffZone = {
+  zone_name: string;
+  count: number | "not_enough_data";
+  severity: string;
+  affected_records: string[];
+  suggested_manager_action: string;
+};
+
+export type SalesManagerDashboardMetrics = {
+  sales_overview: Record<string, number | string>;
+  lead_and_pipeline_health: Record<string, unknown>;
+  drop_off_zone_stats: {
+    total_drop_off_signals: number;
+    top_drop_off_zones: DropOffZone[];
+    [key: string]: unknown;
+  };
+  team_activity_and_ai_adoption: {
+    ai_assisted_workflows_used: number;
+    available_ai_workflows: string[];
+    workflow_usage_breakdown: Record<string, number>;
+    adoption_rate_percent: number;
+    total_ai_assisted_actions: number;
+    most_used_ai_workflow?: string | null;
+    least_used_ai_workflow?: string | null;
+    last_ai_activity_at?: string | null;
+    rep_adoption_status: string;
+    rep_level_recommendation?: string;
+    [key: string]: unknown;
+  };
+  ai_impact: Record<string, unknown>;
+  sales_execution_risks: Record<string, unknown>;
+  recent_revenue_activity: Array<Record<string, unknown>>;
+};
+
+export type AdminDashboardMetrics = {
+  system_status: Record<string, unknown>;
+  review_queue_health: Record<string, unknown>;
+  audit_health: Record<string, unknown>;
+  operational_health: Record<string, unknown>;
+  hubspot_sync_health: Record<string, unknown>;
+  workflow_health: Array<Record<string, unknown>>;
+  action_links: Array<{ label: string; route: string }>;
+};
+
 const DEFAULT_API_BASE_URL = "http://localhost:8000";
 
 export function getApiBaseUrl() {
@@ -227,6 +276,14 @@ export async function getCRMLeadRecordActivities(crmRecordId: string) {
 
 export async function getHubSpotStatus() {
   return getJson<HubSpotStatus>("/hubspot/status");
+}
+
+export async function getSalesManagerDashboardMetrics() {
+  return getJson<SalesManagerDashboardMetrics>("/metrics/sales-manager-dashboard");
+}
+
+export async function getAdminDashboardMetrics() {
+  return getJson<AdminDashboardMetrics>("/metrics/admin-dashboard");
 }
 
 export async function decideReviewItem(

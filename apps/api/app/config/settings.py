@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     hubspot_default_pipeline: str = ""
     hubspot_default_deal_stage: str = ""
     hubspot_owner_id: str = ""
+    n8n_failure_webhook_url: str = ""
+    notifications_enabled: bool = True
 
     model_config = SettingsConfigDict(
         env_file=".env",

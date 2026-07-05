@@ -1,3 +1,5 @@
+import { EmptyState } from "@/components/EmptyState";
+import { ErrorState } from "@/components/ErrorState";
 import { PageHeader } from "@/components/PageHeader";
 import { StatusBadge } from "@/components/StatusBadge";
 import {
@@ -37,20 +39,17 @@ export default async function CRMRecordsPage({
       />
 
       {loadError ? (
-        <section className="card detailPanel">
-          <p className="cardLabel">Backend unavailable</p>
-          <p>{loadError}</p>
-        </section>
+        <ErrorState
+          message="CRM records could not be loaded. Start the backend and refresh this page."
+          detail={loadError}
+        />
       ) : null}
 
       {!loadError && records.length === 0 ? (
-        <section className="card detailPanel">
-          <p className="cardLabel">No CRM records</p>
-          <p>
-            Submit a lead from Lead Intake or run the demo journey to populate
-            internal CRM-style records.
-          </p>
-        </section>
+        <EmptyState
+          title="No CRM records"
+          message="Submit a lead from Lead Intake or run the demo journey to populate internal CRM-style records, sync status, review visibility, and activity history."
+        />
       ) : null}
 
       {!loadError && records.length > 0 ? (
@@ -114,7 +113,7 @@ function CRMRecordCard({
         <div>
           <h2 className="reviewTitle">{record.company}</h2>
           <p className="reviewMeta">
-            {record.contact_name || "Unknown contact"} | {record.email}
+            {record.contact_name || "Unknown contact"} / {record.email}
           </p>
         </div>
         <div className="badgeRow">
@@ -150,7 +149,7 @@ function CRMRecordDetail({
           <p className="cardLabel">Selected CRM record</p>
           <h2 className="sectionTitle">{record.company}</h2>
           <p className="reviewMeta">
-            {record.contact_name || "Unknown contact"} | {record.email}
+            {record.contact_name || "Unknown contact"} / {record.email}
           </p>
         </div>
         <div className="badgeRow">
@@ -228,7 +227,7 @@ function CRMRecordDetail({
                   <h3>{activity.activity_title}</h3>
                   <p>{activity.activity_body}</p>
                   <p className="reviewMeta">
-                    {formatLabel(activity.activity_type)} | {formatDate(activity.created_at)}
+                    {formatLabel(activity.activity_type)} / {formatDate(activity.created_at)}
                   </p>
                 </div>
                 <span className={`miniBadge ${activityTone(activity.activity_status)}`}>

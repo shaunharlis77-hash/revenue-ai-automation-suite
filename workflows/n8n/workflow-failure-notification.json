@@ -1,0 +1,59 @@
+{
+  "name": "Workflow Failure Notification",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "revenue-ai/workflow-failure",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "failure-webhook",
+      "name": "Failure Notification Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [220, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "summary",
+              "name": "notification_summary",
+              "type": "string",
+              "value": "={{'Workflow ' + $json.body.workflow_name + ' failed at step ' + $json.body.step_name + '. Recommended fix: ' + $json.body.recommended_fix}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "prepare-message",
+      "name": "Prepare Safe Message",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [510, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { status: 'received', notification_summary: $json.notification_summary } }}"
+      },
+      "id": "return-received",
+      "name": "Return No-Op Notification Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [790, 300]
+    }
+  ],
+  "connections": {
+    "Failure Notification Webhook": {
+      "main": [[{"node": "Prepare Safe Message", "type": "main", "index": 0}]]
+    },
+    "Prepare Safe Message": {
+      "main": [[{"node": "Return No-Op Notification Result", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "phase-7-failure-notification"
+}

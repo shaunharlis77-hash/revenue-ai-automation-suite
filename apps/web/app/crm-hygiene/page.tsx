@@ -1,3 +1,4 @@
+import { DetailCard } from "@/components/DetailCard";
 import { PageHeader } from "@/components/PageHeader";
 import { StatusBadge } from "@/components/StatusBadge";
 
@@ -5,17 +6,26 @@ export default function CrmHygienePage() {
   return (
     <div className="pageStack">
       <PageHeader
+        eyebrow="Workflow 5"
         title="CRM Hygiene"
-        description="Placeholder space for future CRM data quality checks, stale field detection, and duplicate review."
-        badge={<StatusBadge status="planned" />}
+        description="Read-only CRM hygiene scoring for missing data, stale activity, risky deals, pending reviews, and required rep actions."
+        badge={<StatusBadge status="ready" />}
       />
-      <section className="card detailPanel">
-        <p>
-          Future CRM write-back should be gated by review and audit trails,
-          especially when changing lifecycle or ownership fields.
-        </p>
+      <section className="twoColumn">
+        <DetailCard label="Current behavior" title="Deal risk monitor">
+          <p>
+            The backend checks owner, next step, activity recency, proposal
+            status, review status, required fields, open risks, and days in
+            stage.
+          </p>
+        </DetailCard>
+        <DetailCard label="Data integrity" title="Read-only guardrail">
+          <p>
+            This workflow recommends actions and creates review items where
+            needed. It does not mutate CRM records automatically.
+          </p>
+        </DetailCard>
       </section>
     </div>
   );
 }
-

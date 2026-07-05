@@ -13,13 +13,12 @@ export function PageHeader({
 }: PageHeaderProps) {
   return (
     <header className="pageHeader">
-      <div>
+      <div className="pageHeaderText">
         <p className="eyebrow">{eyebrow}</p>
         <h1>{title}</h1>
         <p className="pageDescription">{description}</p>
       </div>
-      {badge}
+      {badge ? <div className="pageHeaderBadge">{badge}</div> : null}
     </header>
   );
 }
-

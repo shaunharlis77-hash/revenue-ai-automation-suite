@@ -9,8 +9,8 @@ export default function OverviewPage() {
     <div className="pageStack">
       <PageHeader
         title="Overview"
-        description="A foundation dashboard for future sales AI automation. Everything shown here is placeholder data and no live systems are connected."
-        badge={<StatusBadge status="planned" />}
+        description="A suite overview for the Revenue AI automation foundation, including workflows, governance, CRM adapter boundaries, and operational guardrails."
+        badge={<StatusBadge status="live" />}
       />
 
       <section className="metricGrid" aria-label="Foundation metrics">
@@ -40,8 +40,9 @@ export default function OverviewPage() {
         <div className="card detailPanel">
           <p className="cardLabel">Current Boundary</p>
           <p>
-            This dashboard does not authenticate users, call the API, connect to
-            HubSpot, run n8n workflows, or generate AI content yet.
+            The suite does not add authentication, n8n, LangGraph, or LLM calls
+            yet. HubSpot remains sandbox/env controlled, and every workflow must
+            keep audit trail plus operational observability.
           </p>
         </div>
       </section>
