@@ -1,0 +1,817 @@
+:root {
+  --background: #f7f8fa;
+  --surface: #ffffff;
+  --surface-muted: #eef3f6;
+  --text: #17202a;
+  --muted: #65717d;
+  --border: #dce3e8;
+  --accent: #0f766e;
+  --accent-strong: #115e59;
+  --warning: #a15c07;
+  --success: #26734d;
+  --review: #6d5bd0;
+  --shadow: 0 12px 34px rgba(23, 32, 42, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--background);
+  color: var(--text);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.appShell {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 24px 18px;
+  background: #12232c;
+  color: #f8fbfc;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.brandBlock {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 26px;
+}
+
+.brandMark {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 8px;
+  background: #f3c969;
+  color: #12232c;
+  font-weight: 800;
+}
+
+.brandName,
+.brandSubtle {
+  margin: 0;
+}
+
+.brandName {
+  font-size: 16px;
+  font-weight: 750;
+}
+
+.brandSubtle {
+  color: #b7c4ca;
+  font-size: 13px;
+}
+
+.navList {
+  display: grid;
+  gap: 6px;
+}
+
+.navLink {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 9px 12px;
+  border-radius: 8px;
+  color: #d8e3e7;
+  font-size: 14px;
+  font-weight: 620;
+}
+
+.navLink:hover,
+.navLink:focus-visible {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  outline: none;
+}
+
+.content {
+  padding: 32px;
+}
+
+.pageStack {
+  display: grid;
+  gap: 24px;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: 32px;
+  line-height: 1.1;
+}
+
+.pageDescription {
+  max-width: 760px;
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.card,
+.metricCard,
+.workflowCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.metricCard {
+  display: grid;
+  gap: 10px;
+  min-height: 142px;
+  padding: 18px;
+}
+
+.metricLabel,
+.cardLabel {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.metricValue {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.metricNote,
+.workflowDescription {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.workflowGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.workflowCard {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
+
+.workflowTopline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.workflowTitle {
+  margin: 0;
+  font-size: 18px;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.statusBadge.planned {
+  background: #e8f3f1;
+  color: var(--accent-strong);
+}
+
+.statusBadge.review {
+  background: #efedff;
+  color: var(--review);
+}
+
+.statusBadge.draft {
+  background: #fff4df;
+  color: var(--warning);
+}
+
+.statusBadge.ready {
+  background: #e8f5ee;
+  color: var(--success);
+}
+
+.detailPanel {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+}
+
+.detailPanel p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.twoColumn {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 16px;
+}
+
+.reviewList,
+.auditList,
+.operationalFailureList,
+.operationalList,
+.sectionStack {
+  display: grid;
+  gap: 14px;
+}
+
+.reviewItem,
+.auditEvent,
+.operationalFailure,
+.stepEvent {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.auditEvent.event-warning {
+  border-left: 4px solid var(--warning);
+}
+
+.auditEvent.event-danger {
+  border-left: 4px solid #b42318;
+}
+
+.auditEvent.event-review {
+  border-left: 4px solid var(--review);
+}
+
+.auditEvent.event-success {
+  border-left: 4px solid var(--success);
+}
+
+.operationalFailure {
+  border-left: 4px solid #b42318;
+}
+
+.stepEvent {
+  box-shadow: none;
+}
+
+.operationalMetricGrid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.filterPanel {
+  padding: 16px;
+}
+
+.leadIntakeLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.leadIntakePanel {
+  display: grid;
+  gap: 18px;
+  padding: 18px;
+}
+
+.crmRecordsLayout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.25fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.crmRecordList,
+.crmActivityList {
+  display: grid;
+  gap: 12px;
+}
+
+.crmRecordCard,
+.crmRecordDetail {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+}
+
+.crmRecordCard {
+  box-shadow: none;
+}
+
+.crmRecordCard.selectedRecord {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.12);
+}
+
+.crmRecordSummary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.crmRecordDetails {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.crmActivity {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fbfcfd;
+}
+
+.crmActivity h3,
+.crmActivity p {
+  margin: 0;
+}
+
+.crmActivity h3 {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.crmActivity p {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.leadIntakeForm {
+  display: grid;
+  gap: 14px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.textField,
+.textAreaField,
+.checkboxField {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.textField input,
+.textAreaField textarea {
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.textAreaField textarea {
+  resize: vertical;
+}
+
+.checkboxField {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkboxField input {
+  width: 16px;
+  height: 16px;
+}
+
+.emptyResultText {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.leadResultDetails {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.adminLinkRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.adminLinkRow a {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--accent-strong);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.filterForm {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) minmax(260px, 2fr) auto auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.filterForm label {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.filterForm input {
+  min-height: 38px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+.clearFilterLink {
+  color: var(--accent-strong);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.sectionTitle {
+  margin: 4px 0 0;
+  font-size: 20px;
+}
+
+.operationalDetails {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.diagnosticGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.diagnosticBlock {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  background: #f8fafb;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.diagnosticBlock p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.stepEventMain {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.stepDetails {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.reviewItemHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.reviewTitle {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.3;
+}
+
+.reviewMeta {
+  margin: 6px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.badgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.miniBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.status-pending,
+.event-warning {
+  background: #fff4df;
+  color: var(--warning);
+}
+
+.status-approved,
+.step-success,
+.event-success {
+  background: #e8f5ee;
+  color: var(--success);
+}
+
+.status-rejected,
+.step-failed,
+.severity-error,
+.severity-critical,
+.event-danger {
+  background: #fff0ed;
+  color: #b42318;
+}
+
+.step-started,
+.severity-info {
+  background: #edf3f6;
+  color: #31424d;
+}
+
+.step-skipped,
+.severity-warning {
+  background: #fff4df;
+  color: var(--warning);
+}
+
+.badge-retry {
+  background: #e8f3f1;
+  color: var(--accent-strong);
+}
+
+.risk-high {
+  background: #fff0ed;
+  color: #b42318;
+}
+
+.risk-normal,
+.event-neutral {
+  background: #edf3f6;
+  color: #31424d;
+}
+
+.badge-review,
+.event-review {
+  background: #efedff;
+  color: var(--review);
+}
+
+.badge-crm {
+  background: #e8f3f1;
+  color: var(--accent-strong);
+}
+
+.reviewDetails {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 14px;
+  background: #f8fafb;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.reviewDetails div {
+  display: grid;
+  gap: 4px;
+}
+
+.reviewDetails dt {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.reviewDetails dd {
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.4;
+  text-transform: capitalize;
+}
+
+.reviewBlock {
+  display: grid;
+  gap: 8px;
+}
+
+.reviewBlock p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.compactList {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.actionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.primaryButton,
+.secondaryButton {
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primaryButton {
+  border: 1px solid var(--accent-strong);
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.secondaryButton {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.primaryButton:hover,
+.primaryButton:focus-visible,
+.secondaryButton:hover,
+.secondaryButton:focus-visible {
+  filter: brightness(0.96);
+  outline: 2px solid rgba(15, 118, 110, 0.18);
+  outline-offset: 2px;
+}
+
+.decisionText {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.notice {
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-weight: 750;
+}
+
+.successNotice {
+  background: #e8f5ee;
+  color: var(--success);
+  border: 1px solid #badfcc;
+}
+
+.errorNotice {
+  background: #fff0ed;
+  color: #b42318;
+  border: 1px solid #f0c4bd;
+}
+
+@media (max-width: 1040px) {
+  .appShell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+  }
+
+  .navList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .metricGrid,
+  .operationalMetricGrid,
+  .workflowGrid,
+  .leadIntakeLayout,
+  .crmRecordsLayout,
+  .twoColumn,
+  .reviewDetails,
+  .diagnosticGrid,
+  .filterForm {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .content {
+    padding: 22px 16px;
+  }
+
+  .navList,
+  .metricGrid,
+  .operationalMetricGrid,
+  .workflowGrid,
+  .leadIntakeLayout,
+  .crmRecordsLayout,
+  .formGrid,
+  .twoColumn,
+  .diagnosticGrid,
+  .filterForm {
+    grid-template-columns: 1fr;
+  }
+
+  .pageHeader {
+    display: grid;
+  }
+
+  .reviewItemHeader {
+    display: grid;
+  }
+
+  .stepEventMain {
+    display: grid;
+  }
+
+  .badgeRow {
+    justify-content: flex-start;
+  }
+
+  .reviewDetails {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+}

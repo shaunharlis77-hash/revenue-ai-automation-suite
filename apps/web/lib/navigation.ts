@@ -1,0 +1,15 @@
+export const navigationItems = [
+  { label: "Overview", href: "/" },
+  { label: "Lead Intake", href: "/lead-intake" },
+  { label: "CRM Records", href: "/crm-records" },
+  { label: "Lead Scoring", href: "/lead-scoring" },
+  { label: "Meeting Summaries", href: "/meeting-summaries" },
+  { label: "Follow-Up Drafts", href: "/follow-up-drafts" },
+  { label: "CRM Hygiene", href: "/crm-hygiene" },
+  { label: "Proposal Drafts", href: "/proposal-drafts" },
+  { label: "Sales Knowledge Base", href: "/sales-knowledge-base" },
+  { label: "Impact Metrics", href: "/impact-metrics" },
+  { label: "Review Queue", href: "/review-queue" },
+  { label: "Audit Trail", href: "/audit-trail" },
+  { label: "Operational Logs", href: "/operational-logs" },
+];

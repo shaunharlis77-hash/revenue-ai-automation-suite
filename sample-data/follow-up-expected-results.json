@@ -1,0 +1,50 @@
+[
+  {
+    "follow_up_id": "follow_up_001",
+    "confidence": "high",
+    "recommended_send_timing": "Thursday",
+    "review_required": true,
+    "required_review_reasons": ["Customer-facing draft requires sales rep review."]
+  },
+  {
+    "follow_up_id": "follow_up_002",
+    "confidence": "medium",
+    "recommended_send_timing": "next_week",
+    "review_required": true,
+    "required_review_reasons": [
+      "Customer-facing draft requires sales rep review.",
+      "Pricing risk needs review."
+    ]
+  },
+  {
+    "follow_up_id": "follow_up_003",
+    "confidence": "medium",
+    "recommended_send_timing": "today",
+    "review_required": true,
+    "required_review_reasons": [
+      "Customer-facing draft requires sales rep review.",
+      "Security risk needs review.",
+      "Implementation risk needs review."
+    ]
+  },
+  {
+    "follow_up_id": "follow_up_004",
+    "confidence": "medium",
+    "recommended_send_timing": "tomorrow",
+    "review_required": true,
+    "required_review_reasons": [
+      "Customer-facing draft requires sales rep review.",
+      "Adoption risk needs review."
+    ]
+  },
+  {
+    "follow_up_id": "follow_up_005",
+    "confidence": "low",
+    "recommended_send_timing": "after_next_step_confirmed",
+    "review_required": true,
+    "required_review_reasons": [
+      "Customer-facing draft requires sales rep review.",
+      "Next step is missing or unclear."
+    ]
+  }
+]

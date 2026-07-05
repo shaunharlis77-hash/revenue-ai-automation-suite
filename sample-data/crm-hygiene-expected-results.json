@@ -1,0 +1,50 @@
+[
+  {
+    "record_id": "crm_001",
+    "hygiene_score": 100,
+    "risk_level": "low",
+    "human_review_required": false,
+    "missing_fields": [],
+    "recommended_actions_required": false
+  },
+  {
+    "record_id": "crm_002",
+    "hygiene_score": 65,
+    "risk_level": "high",
+    "human_review_required": true,
+    "missing_fields": [],
+    "recommended_actions_required": true
+  },
+  {
+    "record_id": "crm_003",
+    "hygiene_score": 62,
+    "risk_level": "high",
+    "human_review_required": true,
+    "missing_fields": [],
+    "recommended_actions_required": true
+  },
+  {
+    "record_id": "crm_004",
+    "hygiene_score": 77,
+    "risk_level": "medium",
+    "human_review_required": true,
+    "missing_fields": [],
+    "recommended_actions_required": true
+  },
+  {
+    "record_id": "crm_005",
+    "hygiene_score": 65,
+    "risk_level": "medium",
+    "human_review_required": true,
+    "missing_fields": ["budget_context", "company_size", "industry"],
+    "recommended_actions_required": true
+  },
+  {
+    "record_id": "crm_006",
+    "hygiene_score": 0,
+    "risk_level": "critical",
+    "human_review_required": true,
+    "missing_fields": ["budget_context", "company_size", "industry", "timeline"],
+    "recommended_actions_required": true
+  }
+]

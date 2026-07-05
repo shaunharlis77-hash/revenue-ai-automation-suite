@@ -1,0 +1,56 @@
+[
+  {
+    "proposal_id": "proposal_001",
+    "confidence": "high",
+    "human_review_required": true,
+    "required_review_reasons": ["Internal proposal outline requires sales rep review."],
+    "risk_notes_required": false
+  },
+  {
+    "proposal_id": "proposal_002",
+    "confidence": "medium",
+    "human_review_required": true,
+    "required_review_reasons": [
+      "Internal proposal outline requires sales rep review.",
+      "Pricing concern needs review.",
+      "Budget concern needs review."
+    ],
+    "risk_notes_required": true
+  },
+  {
+    "proposal_id": "proposal_003",
+    "confidence": "medium",
+    "human_review_required": true,
+    "required_review_reasons": [
+      "Internal proposal outline requires sales rep review.",
+      "Implementation timeline is urgent.",
+      "Implementation concern needs review."
+    ],
+    "risk_notes_required": true
+  },
+  {
+    "proposal_id": "proposal_004",
+    "confidence": "medium",
+    "human_review_required": true,
+    "required_review_reasons": [
+      "Internal proposal outline requires sales rep review.",
+      "Security concern needs review.",
+      "Legal concern needs review."
+    ],
+    "risk_notes_required": true
+  },
+  {
+    "proposal_id": "proposal_005",
+    "confidence": "low",
+    "human_review_required": true,
+    "required_review_reasons": [
+      "Internal proposal outline requires sales rep review.",
+      "Budget context is missing or unclear.",
+      "Implementation timeline is missing or unclear.",
+      "Pain points or next steps are missing.",
+      "Budget concern needs review.",
+      "Implementation concern needs review."
+    ],
+    "risk_notes_required": true
+  }
+]

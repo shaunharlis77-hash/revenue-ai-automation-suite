@@ -1,0 +1,81 @@
+[
+  {
+    "meeting_id": "meeting_001",
+    "lead_id": "lead_001",
+    "deal_id": "deal_001",
+    "rep_name": "Alex Rivera",
+    "contact_name": "Maya Chen",
+    "company": "Northstar Analytics",
+    "meeting_date": "2026-07-06T15:00:00Z",
+    "meeting_source": "manual_notes",
+    "source_platform": "manual_notes",
+    "transcript_type": "meeting_minutes",
+    "transcript": "Strong discovery call. Maya said inbound campaign volume is rising and reps spend too much time qualifying leads manually. Pain is lead routing, slow response times, and unclear ownership. Budget is approved for this quarter. Timeline is this month before the next campaign launch. Next step: send workflow outline and schedule technical discovery with revenue operations on Thursday."
+  },
+  {
+    "meeting_id": "meeting_002",
+    "lead_id": "lead_002",
+    "deal_id": "deal_002",
+    "rep_name": "Jamie Patel",
+    "contact_name": "Owen Brooks",
+    "company": "Brooks Consulting",
+    "meeting_date": "2026-07-06T16:30:00Z",
+    "meeting_source": "google_meet",
+    "source_platform": "google_meet",
+    "transcript_type": "rough_notes",
+    "transcript": "Owen wanted a general overview. He is not sure what workflow he needs yet. Budget unknown. Timeline unknown. He asked for examples and said he may revisit later. No clear next step besides sending a short overview."
+  },
+  {
+    "meeting_id": "meeting_003",
+    "lead_id": "lead_007",
+    "deal_id": "deal_003",
+    "rep_name": "Alex Rivera",
+    "contact_name": "Marcus Reed",
+    "company": "RapidScale Cloud",
+    "meeting_date": "2026-07-07T09:00:00Z",
+    "meeting_source": "zoom",
+    "source_platform": "zoom",
+    "transcript_type": "full_transcript",
+    "transcript": "Marcus said inbound volume doubled after a product launch and the SDR queue is falling behind. They need routing live before Monday. Approved budget is available if the implementation plan is clear. Main pain points are lead routing, SLA risk, and SDR workload. Next step: provide implementation plan today and book a security and operations review tomorrow."
+  },
+  {
+    "meeting_id": "meeting_004",
+    "lead_id": "lead_006",
+    "deal_id": "deal_004",
+    "rep_name": "Sam Morgan",
+    "contact_name": "Nadia Silva",
+    "company": "Local Growth Studio",
+    "meeting_date": "2026-07-07T12:00:00Z",
+    "meeting_source": "microsoft_teams",
+    "source_platform": "microsoft_teams",
+    "transcript_type": "meeting_minutes",
+    "transcript": "Nadia likes the lead scoring idea but is worried about price and implementation effort. Budget is tight this quarter. She asked whether a lightweight version can work with HubSpot without a long setup. Next step: send a simple package option and confirm budget range next week."
+  },
+  {
+    "meeting_id": "meeting_005",
+    "lead_id": "lead_003",
+    "deal_id": "deal_005",
+    "rep_name": "Jamie Patel",
+    "contact_name": "Priya Nair",
+    "company": "Flowline Ops",
+    "meeting_date": "2026-07-08T10:30:00Z",
+    "meeting_source": "zoom",
+    "source_platform": "zoom",
+    "transcript_type": "full_transcript",
+    "transcript": "Priya said the sales team is nervous about adopting another tool. Reps already ignore some CRM tasks, so adoption and change management are the biggest concerns. The pain is CRM cleanup, lead handoff quality, and manager visibility. Budget is planned, timeline is 30 days, but rollout needs sales manager buy-in. Next step: share adoption plan and schedule manager review."
+  },
+  {
+    "meeting_id": "meeting_006",
+    "lead_id": "lead_005",
+    "deal_id": "deal_006",
+    "rep_name": "Sam Morgan",
+    "contact_name": "Jordan Ellis",
+    "company": "Titan Manufacturing Group",
+    "meeting_date": "2026-07-08T14:00:00Z",
+    "meeting_source": "manual_notes",
+    "source_platform": "manual_notes",
+    "transcript_type": "rough_notes",
+    "transcript": "Short call. Evaluating automation. Need more info. Follow up later."
+  }
+]
+

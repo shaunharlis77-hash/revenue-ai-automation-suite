@@ -1,0 +1,302 @@
+[
+  {
+    "meeting_id": "meeting_001",
+    "crm_note": "Discovery call with Maya at Northstar Analytics. Main pain is rising inbound volume, manual qualification, slow routing, and unclear ownership. Budget is approved and timeline is this month before the next campaign launch. Next step is to send a workflow outline and schedule technical discovery with revenue operations.",
+    "pain_points": ["Manual qualification", "Lead routing", "Slow response times", "Unclear ownership"],
+    "objections": [],
+    "buying_signals": ["Approved budget", "Clear timeline", "Campaign launch deadline", "Technical discovery requested"],
+    "next_steps": ["Send workflow outline", "Schedule technical discovery with revenue operations"],
+    "follow_up_due": "Thursday",
+    "deal_stage_recommendation": "qualified_discovery",
+    "proposal_needed": false,
+    "confidence": "high",
+    "human_review_required": true,
+    "needs_more_info": false,
+    "reasoning": "Strong discovery notes with clear pain, budget, timeline, and next steps.",
+    "recommended_actions": [
+      {
+        "action_type": "prepare_crm_note",
+        "description": "Prepare the discovery summary as a draft CRM note.",
+        "due": "now",
+        "automation_status": "auto_allowed"
+      },
+      {
+        "action_type": "create_task",
+        "description": "Create a rep task to send the workflow outline.",
+        "due": "Thursday",
+        "automation_status": "auto_allowed"
+      },
+      {
+        "action_type": "create_task",
+        "description": "Create a rep task to schedule technical discovery with revenue operations.",
+        "due": "Thursday",
+        "automation_status": "auto_allowed"
+      },
+      {
+        "action_type": "recommend_deal_stage",
+        "description": "Recommend moving the deal to qualified discovery.",
+        "due": "before_crm_update",
+        "automation_status": "review_required"
+      },
+      {
+        "action_type": "schedule_review",
+        "description": "Ask the rep to approve the CRM note and deal stage recommendation.",
+        "due": "before_crm_update",
+        "automation_status": "review_required"
+      }
+    ]
+  },
+  {
+    "meeting_id": "meeting_002",
+    "crm_note": "General overview call with Owen at Brooks Consulting. Need is unclear, budget and timeline are unknown, and there is no firm next step beyond sending overview material.",
+    "pain_points": ["Unclear need"],
+    "objections": ["Budget unknown", "Timeline unknown"],
+    "buying_signals": [],
+    "next_steps": ["Send short overview"],
+    "follow_up_due": "not_set",
+    "deal_stage_recommendation": "nurture",
+    "proposal_needed": false,
+    "confidence": "medium",
+    "human_review_required": true,
+    "needs_more_info": true,
+    "reasoning": "The call had limited buying signal and missing budget and timeline.",
+    "recommended_actions": [
+      {
+        "action_type": "prepare_crm_note",
+        "description": "Prepare a short CRM note that the call was exploratory and missing budget and timeline.",
+        "due": "now",
+        "automation_status": "auto_allowed"
+      },
+      {
+        "action_type": "flag_missing_info",
+        "description": "Flag missing budget, timeline, and use case detail.",
+        "due": "now",
+        "automation_status": "auto_allowed"
+      },
+      {
+        "action_type": "create_task",
+        "description": "Create a rep task to ask one qualifying question and send overview material.",
+        "due": "not_set",
+        "automation_status": "auto_allowed"
+      },
+      {
+        "action_type": "draft_follow_up",
+        "description": "Prepare a simple follow-up asking for use case, budget, and timeline.",
+        "due": "before_customer_send",
+        "automation_status": "review_required"
+      },
+      {
+        "action_type": "schedule_review",
+        "description": "Ask the rep to review the missing-information case before customer follow-up.",
+        "due": "before_customer_send",
+        "automation_status": "review_required"
+      }
+    ]
+  },
+  {
+    "meeting_id": "meeting_003",
+    "crm_note": "Urgent implementation discussion with Marcus at RapidScale Cloud. Inbound volume doubled and the SDR queue is falling behind. They need routing live before Monday and have approved budget if the implementation plan is clear. Next step is to send the implementation plan today and book security and operations review tomorrow.",
+    "pain_points": ["Lead routing", "SLA risk", "SDR workload", "Inbound volume"],
+    "objections": ["Implementation plan must be clear", "Security review needed"],
+    "buying_signals": ["Urgent deadline", "Approved budget", "Operations review requested"],
+    "next_steps": ["Send implementation plan today", "Book security and operations review tomorrow"],
+    "follow_up_due": "today",
+    "deal_stage_recommendation": "solution_review",
+    "proposal_needed": true,
+    "confidence": "high",
+    "human_review_required": true,
+    "needs_more_info": false,
+    "reasoning": "Urgent timeline, approved budget, clear pain, and implementation risk require review.",
+    "recommended_actions": [
+      {
+        "action_type": "prepare_crm_note",
+        "description": "Prepare the urgent implementation summary as a draft CRM note.",
+        "due": "now",
+        "automation_status": "auto_allowed"
+      },
+      {
+        "action_type": "create_task",
+        "description": "Create a rep task to send the implementation plan today.",
+        "due": "today",
+        "automation_status": "auto_allowed"
+      },
+      {
+        "action_type": "create_task",
+        "description": "Create a rep task to book security and operations review tomorrow.",
+        "due": "tomorrow",
+        "automation_status": "auto_allowed"
+      },
+      {
+        "action_type": "draft_follow_up",
+        "description": "Prepare a customer follow-up about the implementation plan and review meeting.",
+        "due": "today",
+        "automation_status": "review_required"
+      },
+      {
+        "action_type": "draft_proposal_outline",
+        "description": "Prepare an implementation proposal outline for rep review.",
+        "due": "today",
+        "automation_status": "review_required"
+      },
+      {
+        "action_type": "recommend_deal_stage",
+        "description": "Recommend moving the deal to solution review.",
+        "due": "before_crm_update",
+        "automation_status": "review_required"
+      },
+      {
+        "action_type": "schedule_review",
+        "description": "Route urgent implementation and security claims to human review.",
+        "due": "today",
+        "automation_status": "review_required"
+      }
+    ]
+  },
+  {
+    "meeting_id": "meeting_004",
+    "crm_note": "Nadia at Local Growth Studio is interested in lead scoring but has pricing and implementation concerns. Budget is tight this quarter. She wants to know whether a lightweight HubSpot-friendly version can work without a long setup. Next step is to send a simple package option and confirm budget range next week.",
+    "pain_points": ["Lead scoring", "Implementation effort"],
+    "objections": ["Pricing concern", "Budget is tight", "Long setup concern"],
+    "buying_signals": ["Asked for lightweight package option", "HubSpot context"],
+    "next_steps": ["Send simple package option", "Confirm budget range next week"],
+    "follow_up_due": "next_week",
+    "deal_stage_recommendation": "qualification",
+    "proposal_needed": true,
+    "confidence": "high",
+    "human_review_required": true,
+    "needs_more_info": false,
+    "reasoning": "Pricing and package guidance need human review before customer-facing follow-up.",
+    "recommended_actions": [
+      {
+        "action_type": "prepare_crm_note",
+        "description": "Prepare the pricing concern and lightweight package discussion as a draft CRM note.",
+        "due": "now",
+        "automation_status": "auto_allowed"
+      },
+      {
+        "action_type": "create_task",
+        "description": "Create a rep task to confirm budget range next week.",
+        "due": "next_week",
+        "automation_status": "auto_allowed"
+      },
+      {
+        "action_type": "draft_follow_up",
+        "description": "Prepare a customer follow-up about lightweight package options.",
+        "due": "next_week",
+        "automation_status": "review_required"
+      },
+      {
+        "action_type": "draft_proposal_outline",
+        "description": "Prepare a lightweight proposal outline for review.",
+        "due": "next_week",
+        "automation_status": "review_required"
+      },
+      {
+        "action_type": "recommend_deal_stage",
+        "description": "Recommend keeping the deal in qualification until budget range is confirmed.",
+        "due": "before_crm_update",
+        "automation_status": "review_required"
+      },
+      {
+        "action_type": "schedule_review",
+        "description": "Route pricing and package guidance to human review.",
+        "due": "before_customer_send",
+        "automation_status": "review_required"
+      }
+    ]
+  },
+  {
+    "meeting_id": "meeting_005",
+    "crm_note": "Priya at Flowline Ops raised adoption and change management concerns. The team needs CRM cleanup, better lead handoff quality, and manager visibility. Budget is planned and timeline is 30 days, but rollout needs sales manager buy-in. Next step is to share an adoption plan and schedule manager review.",
+    "pain_points": ["CRM cleanup", "Lead handoff quality", "Manager visibility", "Sales adoption"],
+    "objections": ["Sales team adoption concern", "Manager buy-in needed"],
+    "buying_signals": ["Budget planned", "30-day timeline", "Manager review requested"],
+    "next_steps": ["Share adoption plan", "Schedule manager review"],
+    "follow_up_due": "not_set",
+    "deal_stage_recommendation": "qualified_discovery",
+    "proposal_needed": false,
+    "confidence": "high",
+    "human_review_required": true,
+    "needs_more_info": false,
+    "reasoning": "Clear pain, budget, timeline, and next steps are present.",
+    "recommended_actions": [
+      {
+        "action_type": "prepare_crm_note",
+        "description": "Prepare the adoption concern and manager buy-in summary as a draft CRM note.",
+        "due": "now",
+        "automation_status": "auto_allowed"
+      },
+      {
+        "action_type": "create_task",
+        "description": "Create a rep task to share the adoption plan.",
+        "due": "not_set",
+        "automation_status": "auto_allowed"
+      },
+      {
+        "action_type": "create_task",
+        "description": "Create a rep task to schedule manager review.",
+        "due": "not_set",
+        "automation_status": "auto_allowed"
+      },
+      {
+        "action_type": "draft_follow_up",
+        "description": "Prepare a customer follow-up about adoption plan and manager review.",
+        "due": "before_customer_send",
+        "automation_status": "review_required"
+      },
+      {
+        "action_type": "recommend_deal_stage",
+        "description": "Recommend moving the deal to qualified discovery.",
+        "due": "before_crm_update",
+        "automation_status": "review_required"
+      },
+      {
+        "action_type": "schedule_review",
+        "description": "Route adoption and change management risks to human review.",
+        "due": "before_customer_send",
+        "automation_status": "review_required"
+      }
+    ]
+  },
+  {
+    "meeting_id": "meeting_006",
+    "crm_note": "Short call with Jordan at Titan Manufacturing Group. Notes are too limited to identify clear pain, budget, timeline, or next steps.",
+    "pain_points": ["Unclear need"],
+    "objections": ["Not enough information"],
+    "buying_signals": [],
+    "next_steps": ["Ask for pain points, timeline, budget, and next step"],
+    "follow_up_due": "not_set",
+    "deal_stage_recommendation": "needs_qualification",
+    "proposal_needed": false,
+    "confidence": "low",
+    "human_review_required": true,
+    "needs_more_info": true,
+    "reasoning": "Transcript is too short and lacks enough detail for a reliable CRM summary.",
+    "recommended_actions": [
+      {
+        "action_type": "prepare_crm_note",
+        "description": "Prepare a low-confidence CRM note saying the call notes are too limited.",
+        "due": "now",
+        "automation_status": "auto_allowed"
+      },
+      {
+        "action_type": "flag_missing_info",
+        "description": "Flag missing pain points, budget, timeline, and next step.",
+        "due": "now",
+        "automation_status": "auto_allowed"
+      },
+      {
+        "action_type": "create_task",
+        "description": "Create a rep task to gather missing qualification details.",
+        "due": "not_set",
+        "automation_status": "auto_allowed"
+      },
+      {
+        "action_type": "schedule_review",
+        "description": "Ask the rep to review the low-confidence summary before any CRM update.",
+        "due": "before_crm_update",
+        "automation_status": "review_required"
+      }
+    ]
+  }
+]
