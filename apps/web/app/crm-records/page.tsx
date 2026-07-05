@@ -30,9 +30,9 @@ export default async function CRMRecordsPage({
   return (
     <div className="pageStack">
       <PageHeader
-        eyebrow="Phase 4"
+        eyebrow="Phase 5"
         title="CRM Records"
-        description="Mock CRM adapter records showing safe internal write-back, routing status, review visibility, and related CRM activities."
+        description="CRM adapter records showing safe internal write-back, HubSpot sandbox sync status, review visibility, and related CRM activities."
         badge={<StatusBadge status="ready" />}
       />
 
@@ -119,6 +119,7 @@ function CRMRecordCard({
         </div>
         <div className="badgeRow">
           <StatusMiniBadge value={record.crm_update_status} />
+          <HubSpotSyncBadge value={record.hubspot_sync_status} />
           <PriorityBadge value={record.priority} />
         </div>
       </div>
@@ -154,6 +155,8 @@ function CRMRecordDetail({
         </div>
         <div className="badgeRow">
           <StatusMiniBadge value={record.crm_update_status} />
+          <span className="miniBadge badge-crm">{formatLabel(record.adapter_mode)} mode</span>
+          <HubSpotSyncBadge value={record.hubspot_sync_status} />
           {record.human_review_required ? (
             <span className="miniBadge badge-review">review required</span>
           ) : (
@@ -199,6 +202,21 @@ function CRMRecordDetail({
       ) : null}
 
       <div className="reviewBlock">
+        <p className="cardLabel">HubSpot sync</p>
+        <dl className="reviewDetails crmRecordSummary">
+          <Detail label="Adapter mode" value={formatLabel(record.adapter_mode)} />
+          <Detail label="Sync status" value={formatLabel(record.hubspot_sync_status)} />
+          <Detail label="Contact ID" value={record.hubspot_contact_id || "Not set"} />
+          <Detail label="Company ID" value={record.hubspot_company_id || "Not set"} />
+          <Detail label="Deal ID" value={record.hubspot_deal_id || "Not set"} />
+          <Detail label="Last sync" value={record.last_hubspot_sync_at ? formatDate(record.last_hubspot_sync_at) : "Not synced"} />
+        </dl>
+        {record.hubspot_sync_error ? (
+          <p className="errorText">{record.hubspot_sync_error}</p>
+        ) : null}
+      </div>
+
+      <div className="reviewBlock">
         <p className="cardLabel">CRM activities</p>
         {activities.length === 0 ? (
           <p>No CRM activities are recorded for this mock CRM record yet.</p>
@@ -224,6 +242,7 @@ function CRMRecordDetail({
 
       <div className="adminLinkRow">
         <a href="/lead-intake">Lead Intake</a>
+        <a href="/hubspot-status">HubSpot Status</a>
         <a href="/review-queue">Review Queue</a>
         <a href="/audit-trail">Audit Trail</a>
         <a href="/operational-logs">Operational Logs</a>
@@ -248,6 +267,10 @@ function StatusMiniBadge({
 function PriorityBadge({ value }: { value: string }) {
   const tone = value === "critical" || value === "high" ? "event-warning" : "badge-crm";
   return <span className={`miniBadge ${tone}`}>{formatLabel(value)}</span>;
+}
+
+function HubSpotSyncBadge({ value }: { value: CRMLeadRecord["hubspot_sync_status"] }) {
+  return <span className={`miniBadge ${hubspotSyncTone(value)}`}>{formatLabel(value)}</span>;
 }
 
 function Detail({ label, value }: { label: string; value: string }) {
@@ -275,6 +298,19 @@ function activityTone(status: CRMActivity["activity_status"]) {
   }
   if (status === "applied") {
     return "event-success";
+  }
+  return "badge-crm";
+}
+
+function hubspotSyncTone(status: CRMLeadRecord["hubspot_sync_status"]) {
+  if (status === "failed" || status === "blocked_pending_review") {
+    return "event-danger";
+  }
+  if (status === "synced") {
+    return "event-success";
+  }
+  if (status === "partial_sync") {
+    return "event-warning";
   }
   return "badge-crm";
 }

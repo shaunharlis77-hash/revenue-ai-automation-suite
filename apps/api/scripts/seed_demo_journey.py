@@ -123,7 +123,7 @@ def lead_request() -> LeadScoringRequest:
     return LeadScoringRequest(
         lead_id="demo_lead_northstar_maya",
         name="Maya Chen",
-        email="maya.chen@northstaranalytics.example",
+        email="maya.chen.demo@northstar-analytics-demo.com",
         company="Northstar Analytics",
         role="VP of Sales",
         company_size="201-500",

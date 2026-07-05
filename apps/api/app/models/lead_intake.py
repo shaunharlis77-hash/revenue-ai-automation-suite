@@ -9,6 +9,14 @@ CRMUpdateStatus = Literal[
     "applied_with_review_visibility",
 ]
 EnrichmentConfidence = Literal["high", "medium", "low"]
+HubSpotSyncStatus = Literal[
+    "not_enabled",
+    "synced",
+    "partial_sync",
+    "blocked_pending_review",
+    "failed",
+    "skipped_mock_mode",
+]
 
 
 class LeadIntakeRequest(BaseModel):
@@ -80,6 +88,16 @@ class CRMLeadRecord(BaseModel):
     crm_update_status: CRMUpdateStatus
     human_review_required: bool
     risk_flags: list[str]
+    adapter_mode: str = "mock"
+    hubspot_contact_id: str | None = None
+    hubspot_company_id: str | None = None
+    hubspot_deal_id: str | None = None
+    hubspot_task_id: str | None = None
+    hubspot_note_id: str | None = None
+    hubspot_sync_status: HubSpotSyncStatus = "skipped_mock_mode"
+    hubspot_sync_error: str | None = None
+    last_hubspot_sync_at: str | None = None
+    hubspot_portal_id: str | None = None
     created_at: str
     updated_at: str
     metadata_json: dict = Field(default_factory=dict)

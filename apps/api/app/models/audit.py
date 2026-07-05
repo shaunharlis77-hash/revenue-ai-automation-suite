@@ -29,6 +29,16 @@ AuditEventType = Literal[
     "crm_adapter_write_blocked",
     "crm_activity_created",
     "crm_adapter_write_failed",
+    "hubspot_sync_started",
+    "hubspot_contact_upserted",
+    "hubspot_company_upserted",
+    "hubspot_deal_upserted",
+    "hubspot_task_created",
+    "hubspot_note_created",
+    "hubspot_records_associated",
+    "hubspot_sync_completed",
+    "hubspot_sync_failed",
+    "hubspot_sync_blocked",
 ]
 
 

@@ -746,6 +746,10 @@ h1 {
   border: 1px solid #f0c4bd;
 }
 
+.errorText {
+  color: #b42318;
+}
+
 @media (max-width: 1040px) {
   .appShell {
     grid-template-columns: 1fr;

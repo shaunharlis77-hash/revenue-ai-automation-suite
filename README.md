@@ -2,7 +2,7 @@
 
 Foundation for a revenue AI automation suite that will eventually support sales operations workflows across a web dashboard, FastAPI backend, n8n automations, HubSpot, and AI-assisted task flows.
 
-This repository is intentionally simple at this stage. It does not include real AI workflows, HubSpot integration, external API calls, authentication, or production secrets.
+This repository is intentionally controlled. Mock/local mode is the default. Optional HubSpot sandbox sync can be enabled with environment variables, but no real secrets are committed and no customer-facing messages are sent automatically.
 
 ## What This Project Is
 
@@ -10,10 +10,11 @@ The project is a working foundation for an internal sales operations automation 
 
 ## Current Status
 
-- Foundation verified locally.
-- API placeholder routes available.
-- Dashboard shell running.
-- Next step is Workflow 1: Lead Scoring and Routing.
+- Deterministic backend workflows are implemented and tested.
+- Review Queue, Audit Trail, Operational Logs, Lead Intake, CRM Records, and HubSpot Status UI layers are available.
+- Mock CRM adapter remains the default local mode.
+- Optional HubSpot sandbox adapter is functionally verified.
+- Business audit trail and operational observability are mandatory for every workflow and integration.
 
 ## Current Structure
 
@@ -186,7 +187,116 @@ Run the adapter check from `apps/api`:
 python scripts/test_mock_crm_adapter.py
 ```
 
-No real HubSpot, n8n, LangGraph, external API, email, auth, Docker, or Postgres integration is included.
+Mock mode remains the default and does not call external APIs.
+
+## Phase 5: Optional HubSpot Sandbox Adapter
+
+The CRM adapter now supports two modes:
+
+- `mock`: local-only default.
+- `hubspot`: optional sandbox write-back through a HubSpot private app token.
+
+Environment variables:
+
+```bash
+CRM_ADAPTER_MODE=mock
+HUBSPOT_ENABLED=false
+HUBSPOT_ACCESS_TOKEN=
+HUBSPOT_PORTAL_ID=
+HUBSPOT_DEFAULT_PIPELINE=
+HUBSPOT_DEFAULT_DEAL_STAGE=
+HUBSPOT_OWNER_ID=
+```
+
+Backend routes:
+
+```text
+GET /hubspot/status
+POST /hubspot/setup-properties
+POST /hubspot/sync/lead/{lead_id}
+```
+
+Frontend pages:
+
+```text
+http://localhost:3000/crm-records
+http://localhost:3000/hubspot-status
+```
+
+Supported AI property names:
+
+```text
+ai_lead_score
+ai_priority
+ai_route
+ai_confidence
+ai_next_action
+ai_human_review_required
+ai_last_workflow_run
+ai_hygiene_score
+ai_risk_level
+ai_follow_up_status
+ai_proposal_status
+```
+
+Set up properties intentionally from `apps/api`:
+
+```bash
+python scripts/setup_hubspot_properties.py
+```
+
+Run no-network HubSpot adapter checks:
+
+```bash
+python scripts/test_hubspot_adapter_config.py
+python scripts/test_hubspot_adapter_mapping.py
+```
+
+Optional manual sandbox smoke test:
+
+```bash
+python scripts/smoke_test_hubspot_sandbox.py
+```
+
+The smoke test only runs when HubSpot mode is explicitly enabled and a token is configured. It uses synthetic demo data only.
+
+Latest verified smoke result:
+
+```text
+crm_update_status=applied
+hubspot_sync_status=synced
+review_created=False
+risk_flags=[]
+hubspot_contact_id returned
+hubspot_company_id returned
+hubspot_deal_id returned
+hubspot_task_id returned
+hubspot_note_id returned
+audit_events=16
+workflow_step_events=23
+guardrail_audit_events=0
+```
+
+HubSpot hardening:
+
+- Local/mock tests force mock mode even when `.env` is configured for HubSpot.
+- HubSpot mapping tests do not perform network calls.
+- Only `scripts/smoke_test_hubspot_sandbox.py` intentionally writes to HubSpot.
+- Standard HubSpot company fields are normalized before sync.
+- Task payloads include required HubSpot task fields.
+- Optional activity failures preserve core contact, company, and deal sync.
+- Tokens are never returned or logged.
+
+## Acceptance Criteria
+
+Every workflow, adapter, automation, and integration must include:
+
+- Business audit trail.
+- Operational observability.
+- Passing tests.
+- Clean failure diagnostics.
+- Explicit human-review policy where relevant.
+- Documentation updates when routes, workflows, entities, or the demo story change.
 
 ### Web
 
@@ -206,5 +316,6 @@ http://localhost:3000
 
 - Use `.env.example` as a template only.
 - Do not commit real API keys.
-- No external APIs are called in this foundation.
+- External APIs are not called in default mock mode.
+- HubSpot sandbox calls require explicit `CRM_ADAPTER_MODE=hubspot`, `HUBSPOT_ENABLED=true`, and a private app token.
 - Human review is expected before any future AI-generated output is sent to customers or written to CRM systems.

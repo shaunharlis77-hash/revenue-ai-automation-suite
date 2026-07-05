@@ -166,6 +166,32 @@ That gives the project a realistic write-back boundary without calling external 
 
 This makes the future HubSpot step cleaner because workflow logic already calls an adapter instead of writing directly to CRM tables. It also makes the demo clearer because the CRM Records screen shows exactly what would have been written, blocked, or flagged for review.
 
+## How I explain the HubSpot sandbox adapter
+
+After the mock adapter was working, I added HubSpot as an optional sandbox mode behind the same adapter boundary.
+
+Mock mode remains the default, so the project is still safe to run locally without secrets or external calls. HubSpot mode only runs when the environment explicitly enables it and provides a private app token.
+
+The adapter maps Lead Intake output into HubSpot contacts, companies, deals, internal tasks, and internal notes. It also prepares AI custom properties such as lead score, priority, route, confidence, next action, human review flag, and workflow run id.
+
+The same guardrails still apply. Clean updates can sync automatically, high-priority leads can sync with review visibility, and risky or ambiguous leads block sensitive sync pending review. The adapter never sends customer-facing emails, follow-ups, or proposals.
+
+Every meaningful HubSpot step writes audit events and operational step events, so a reviewer can see what was synced while a maintainer can diagnose token, scope, rate-limit, validation, or server failures.
+
+Phase 5 is now functionally verified in a real HubSpot sandbox. Property setup completed, the no-network mapping/config tests passed, local mock-mode tests stayed isolated from HubSpot, and the real smoke test created the expected contact, company, deal, task, and note records.
+
+I also hardened the adapter around real HubSpot validation details. Standard company fields are normalized before sync, task payloads include HubSpot-required fields, and optional activity failures do not erase successful contact, company, or deal sync. This keeps the integration practical without weakening the review and guardrail model.
+
+## How I explain non-negotiable audit and observability
+
+Every workflow and integration needs two visibility layers.
+
+The audit trail is for business traceability: what happened, which workflow ran, which entity was affected, whether the action was applied, blocked, skipped, failed, or recommended, whether guardrails triggered, and whether human review was required.
+
+Operational observability is for maintenance: which technical step ran, which step failed, how severe it was, whether retry makes sense, and what the maintainer should check next.
+
+I treat both as acceptance criteria. A workflow is not complete just because the happy path works. It also needs tests, audit events, step events, clean failure diagnostics, explicit human-review policy where relevant, and updated documentation.
+
 ## How I explain operational guardrails
 
 I wanted the workflows to be maintainable, not just functional. Every workflow should show whether it worked, where it failed, and why.

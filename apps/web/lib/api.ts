@@ -107,6 +107,22 @@ export type CRMLeadRecord = {
     | "applied_with_review_visibility";
   human_review_required: boolean;
   risk_flags: string[];
+  adapter_mode: string;
+  hubspot_contact_id?: string | null;
+  hubspot_company_id?: string | null;
+  hubspot_deal_id?: string | null;
+  hubspot_task_id?: string | null;
+  hubspot_note_id?: string | null;
+  hubspot_sync_status:
+    | "not_enabled"
+    | "synced"
+    | "partial_sync"
+    | "blocked_pending_review"
+    | "failed"
+    | "skipped_mock_mode";
+  hubspot_sync_error?: string | null;
+  last_hubspot_sync_at?: string | null;
+  hubspot_portal_id?: string | null;
   created_at: string;
   updated_at: string;
   metadata_json: Record<string, unknown>;
@@ -162,6 +178,17 @@ export type LeadIntakeResponse = {
   reasoning: string;
 };
 
+export type HubSpotStatus = {
+  adapter_mode: string;
+  hubspot_enabled: boolean;
+  token_configured: boolean;
+  portal_id?: string | null;
+  default_pipeline_configured: boolean;
+  default_deal_stage_configured: boolean;
+  owner_id_configured: boolean;
+  status: string;
+};
+
 const DEFAULT_API_BASE_URL = "http://localhost:8000";
 
 export function getApiBaseUrl() {
@@ -196,6 +223,10 @@ export async function getCRMLeadRecords() {
 
 export async function getCRMLeadRecordActivities(crmRecordId: string) {
   return getJson<CRMActivity[]>(`/crm/leads/${crmRecordId}/activities`);
+}
+
+export async function getHubSpotStatus() {
+  return getJson<HubSpotStatus>("/hubspot/status");
 }
 
 export async function decideReviewItem(

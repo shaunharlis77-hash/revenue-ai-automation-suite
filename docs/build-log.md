@@ -2,6 +2,102 @@
 
 ## 2026-07-05
 
+### Phase 5: HubSpot Sandbox Integration verified
+
+Completed the Phase 5 HubSpot sandbox integration lock.
+
+Implemented:
+
+- HubSpot CRM adapter behind the CRM adapter boundary.
+- Mock adapter remains default and safe.
+- HubSpot mode controlled by environment variables.
+- HubSpot status endpoint.
+- HubSpot property setup script.
+- Contact sync.
+- Company sync.
+- Deal sync.
+- Task creation.
+- Note creation.
+- AI custom property sync.
+- HubSpot-safe company property normalization.
+- HubSpot-safe task payload mapping.
+- Optional external activity failure handling.
+- Real sandbox smoke test.
+- Token-safe responses.
+
+Verification completed:
+
+- HubSpot property setup completed successfully.
+- `test_hubspot_adapter_mapping.py` passed.
+- `test_hubspot_adapter_config.py` passed.
+- `test_mock_crm_adapter.py` passed in forced mock mode.
+- `test_lead_intake.py` passed in forced mock mode.
+- Real HubSpot smoke test passed.
+
+Smoke test result:
+
+- `crm_update_status=applied`.
+- `hubspot_sync_status=synced`.
+- `review_created=False`.
+- `risk_flags=[]`.
+- HubSpot contact ID returned.
+- HubSpot company ID returned.
+- HubSpot deal ID returned.
+- HubSpot task ID returned.
+- HubSpot note ID returned.
+- `audit_events=16`.
+- `workflow_step_events=23`.
+- `guardrail_audit_events=0`.
+
+Key hardening:
+
+- Local/mock tests force mock mode even when `.env` is configured for HubSpot.
+- HubSpot mapping tests do not perform network calls.
+- Only `smoke_test_hubspot_sandbox.py` intentionally writes to HubSpot.
+- HubSpot standard fields are normalized before sync.
+- Industry values are mapped to HubSpot-safe enum values.
+- `numberofemployees` is mapped to an integer.
+- Task payload includes required HubSpot task fields.
+- Optional activity failures preserve core contact, company, and deal sync.
+- Tokens are never returned or logged.
+
+No real tokens or secret values were added to documentation or committed files.
+
+### Phase 5: HubSpot Sandbox Integration
+
+Added an optional HubSpot sandbox adapter behind the existing CRM adapter boundary.
+
+Included:
+
+- Added HubSpot environment settings with safe mock-mode defaults.
+- Added a CRM adapter factory that selects mock mode unless HubSpot mode is explicitly enabled.
+- Added `hubspot_adapter.py` with contact, company, deal, task, note, association, sync status, and custom property setup support.
+- Added HubSpot object mapping for Lead Intake outputs and AI custom properties.
+- Added HubSpot sync metadata to local CRM lead records so the CRM Records UI remains useful in both modes.
+- Added HubSpot audit events for sync started, object upserts, task/note creation, associations, sync completion, sync failure, and blocked sync.
+- Added HubSpot operational step events for sync start, object creation/update, property checks, associations, completion, skipped sync, and failure diagnostics.
+- Added `/hubspot/status`, `/hubspot/setup-properties`, and `/hubspot/sync/lead/{lead_id}`.
+- Added `scripts/setup_hubspot_properties.py`.
+- Added `scripts/test_hubspot_adapter_config.py` and `scripts/test_hubspot_adapter_mapping.py`.
+- Added optional manual `scripts/smoke_test_hubspot_sandbox.py` for intentional sandbox testing only.
+- Updated CRM Records and Lead Intake UI to show adapter mode, HubSpot sync status, HubSpot IDs, last sync time, and sync errors.
+- Added `/hubspot-status`.
+
+Policy preserved:
+
+- Mock mode remains the default and does not call HubSpot.
+- Safe clean lead updates can sync automatically when HubSpot mode is explicitly enabled.
+- High-priority leads can sync with review visibility.
+- Risky or ambiguous leads block sensitive HubSpot sync pending review.
+- Customer-facing emails, follow-ups, and proposals are never sent automatically.
+- HubSpot private app tokens are read only from environment variables and are never returned in API responses.
+
+Frontend verification: `npm run build` passed.
+
+Python test execution was not available in the current shell because no Python launcher was found. Added no-network test scripts for local verification.
+
+No n8n, LangGraph, external enrichment API, email sending, auth, Docker/Postgres change, or real customer data was added.
+
 ### Phase 4: Mock CRM Adapter and CRM Records View
 
 Added a local mock CRM adapter foundation and CRM Records admin view.

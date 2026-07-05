@@ -170,6 +170,21 @@ function LeadResultPanel({ record }: { record: CRMLeadRecord | null }) {
       </div>
 
       <div className="reviewBlock">
+        <p className="cardLabel">CRM adapter</p>
+        <p>
+          {formatLabel(record.adapter_mode)} mode | HubSpot sync:{" "}
+          {formatLabel(record.hubspot_sync_status)}
+        </p>
+        {record.hubspot_contact_id || record.hubspot_company_id || record.hubspot_deal_id ? (
+          <p className="reviewMeta">
+            Contact {record.hubspot_contact_id || "not set"} | Company{" "}
+            {record.hubspot_company_id || "not set"} | Deal{" "}
+            {record.hubspot_deal_id || "not set"}
+          </p>
+        ) : null}
+      </div>
+
+      <div className="reviewBlock">
         <p className="cardLabel">Review created</p>
         <p>{record.human_review_required ? "Yes" : "No"}</p>
       </div>
@@ -209,6 +224,7 @@ function LeadResultPanel({ record }: { record: CRMLeadRecord | null }) {
           View CRM Record
         </a>
         <a href="/crm-records">CRM Records</a>
+        <a href="/hubspot-status">HubSpot Status</a>
         <a href="/review-queue">Review Queue</a>
         <a href="/audit-trail">Audit Trail</a>
         <a href="/operational-logs">Operational Logs</a>

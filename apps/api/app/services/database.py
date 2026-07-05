@@ -147,6 +147,16 @@ def initialize_database(connection: sqlite3.Connection) -> None:
             crm_update_status TEXT NOT NULL,
             human_review_required INTEGER NOT NULL DEFAULT 0,
             risk_flags TEXT NOT NULL,
+            adapter_mode TEXT NOT NULL DEFAULT 'mock',
+            hubspot_contact_id TEXT,
+            hubspot_company_id TEXT,
+            hubspot_deal_id TEXT,
+            hubspot_task_id TEXT,
+            hubspot_note_id TEXT,
+            hubspot_sync_status TEXT NOT NULL DEFAULT 'skipped_mock_mode',
+            hubspot_sync_error TEXT,
+            last_hubspot_sync_at TEXT,
+            hubspot_portal_id TEXT,
             created_at TEXT NOT NULL,
             updated_at TEXT NOT NULL,
             metadata_json TEXT
@@ -168,7 +178,32 @@ def initialize_database(connection: sqlite3.Connection) -> None:
         );
         """
     )
+    ensure_crm_lead_record_columns(connection)
     connection.commit()
+
+
+def ensure_crm_lead_record_columns(connection: sqlite3.Connection) -> None:
+    existing_columns = {
+        row["name"]
+        for row in connection.execute("PRAGMA table_info(crm_lead_records)").fetchall()
+    }
+    required_columns = {
+        "adapter_mode": "TEXT NOT NULL DEFAULT 'mock'",
+        "hubspot_contact_id": "TEXT",
+        "hubspot_company_id": "TEXT",
+        "hubspot_deal_id": "TEXT",
+        "hubspot_task_id": "TEXT",
+        "hubspot_note_id": "TEXT",
+        "hubspot_sync_status": "TEXT NOT NULL DEFAULT 'skipped_mock_mode'",
+        "hubspot_sync_error": "TEXT",
+        "last_hubspot_sync_at": "TEXT",
+        "hubspot_portal_id": "TEXT",
+    }
+    for column_name, column_definition in required_columns.items():
+        if column_name not in existing_columns:
+            connection.execute(
+                f"ALTER TABLE crm_lead_records ADD COLUMN {column_name} {column_definition}"
+            )
 
 
 def encode_json(value: Any) -> str:

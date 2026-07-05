@@ -165,6 +165,16 @@ def upsert_record(
     risk_flags: list[str],
     workflow_run_id: str,
     existing: CRMLeadRecord | None,
+    adapter_mode: str = "mock",
+    hubspot_contact_id: str | None = None,
+    hubspot_company_id: str | None = None,
+    hubspot_deal_id: str | None = None,
+    hubspot_task_id: str | None = None,
+    hubspot_note_id: str | None = None,
+    hubspot_sync_status: str = "skipped_mock_mode",
+    hubspot_sync_error: str | None = None,
+    last_hubspot_sync_at: str | None = None,
+    hubspot_portal_id: str | None = None,
 ) -> CRMLeadRecord:
     timestamp = utc_now()
     crm_record_id = existing.crm_record_id if existing else f"crm_lead_{uuid4()}"
@@ -189,6 +199,16 @@ def upsert_record(
         crm_update_status,
         int(human_review_required),
         encode_json(risk_flags),
+        adapter_mode,
+        hubspot_contact_id,
+        hubspot_company_id,
+        hubspot_deal_id,
+        hubspot_task_id,
+        hubspot_note_id,
+        hubspot_sync_status,
+        hubspot_sync_error,
+        last_hubspot_sync_at,
+        hubspot_portal_id,
         created_at,
         timestamp,
         encode_json(
@@ -196,7 +216,7 @@ def upsert_record(
                 DEMO_METADATA_KEY: True,
                 "workflow_run_id": workflow_run_id,
                 "safe_internal_crm_record": True,
-                "adapter": "mock_crm_adapter",
+                "adapter": adapter_mode,
             }
         ),
     )
@@ -209,10 +229,13 @@ def upsert_record(
                     enriched_persona, company_size_band, industry_normalized,
                     region_normalized, lead_score, priority, confidence, urgency,
                     recommended_route, next_best_action, crm_update_status,
-                    human_review_required, risk_flags, created_at, updated_at,
-                    metadata_json
+                    human_review_required, risk_flags, adapter_mode,
+                    hubspot_contact_id, hubspot_company_id, hubspot_deal_id,
+                    hubspot_task_id, hubspot_note_id, hubspot_sync_status,
+                    hubspot_sync_error, last_hubspot_sync_at,
+                    hubspot_portal_id, created_at, updated_at, metadata_json
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 values,
             )
@@ -446,6 +469,16 @@ def crm_lead_record_from_row(row) -> CRMLeadRecord:
         crm_update_status=row["crm_update_status"],
         human_review_required=bool(row["human_review_required"]),
         risk_flags=decode_json(row["risk_flags"], []),
+        adapter_mode=row["adapter_mode"],
+        hubspot_contact_id=row["hubspot_contact_id"],
+        hubspot_company_id=row["hubspot_company_id"],
+        hubspot_deal_id=row["hubspot_deal_id"],
+        hubspot_task_id=row["hubspot_task_id"],
+        hubspot_note_id=row["hubspot_note_id"],
+        hubspot_sync_status=row["hubspot_sync_status"],
+        hubspot_sync_error=row["hubspot_sync_error"],
+        last_hubspot_sync_at=row["last_hubspot_sync_at"],
+        hubspot_portal_id=row["hubspot_portal_id"],
         created_at=row["created_at"],
         updated_at=row["updated_at"],
         metadata_json=decode_json(row["metadata_json"], {}),

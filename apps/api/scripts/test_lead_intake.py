@@ -1,3 +1,4 @@
+import os
 import sys
 from pathlib import Path
 from uuid import uuid4
@@ -5,6 +6,10 @@ from uuid import uuid4
 
 API_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(API_ROOT))
+
+os.environ["CRM_ADAPTER_MODE"] = "mock"
+os.environ["HUBSPOT_ENABLED"] = "false"
+os.environ["HUBSPOT_ACCESS_TOKEN"] = ""
 
 from app.models.lead_intake import LeadIntakeRequest  # noqa: E402
 from app.services.audit_trail import list_audit_events  # noqa: E402
@@ -18,6 +23,7 @@ TEST_RUN_ID = uuid4().hex[:8]
 
 
 def main() -> int:
+    print("Running in forced mock mode.")
     checks = [
         ("clean lead updates CRM record automatically", check_clean_lead),
         ("high-priority lead applies update with review visibility", check_high_priority_lead),
@@ -205,10 +211,10 @@ def clean_lead() -> LeadIntakeRequest:
     return LeadIntakeRequest(
         first_name="Nadia",
         last_name="Patel",
-        email=f"nadia.patel+{TEST_RUN_ID}@localgrowth.example",
+        email=f"nadia.patel.{TEST_RUN_ID}@localgrowth-demo.com",
         company="Local Growth Studio",
         job_title="Operations Manager",
-        company_website="https://localgrowth.example",
+        company_website="https://localgrowth-demo.com",
         company_size="51-200",
         industry="Marketing Services",
         region="EMEA",
@@ -230,10 +236,10 @@ def high_priority_lead() -> LeadIntakeRequest:
     return LeadIntakeRequest(
         first_name="Maya",
         last_name="Chen",
-        email=f"maya.chen+{TEST_RUN_ID}@northstaranalytics.example",
+        email=f"maya.chen.{TEST_RUN_ID}@northstar-analytics-demo.com",
         company="Northstar Analytics",
         job_title="VP of Sales",
-        company_website="https://northstaranalytics.example",
+        company_website="https://northstar-analytics-demo.com",
         company_size="201-500",
         industry="Analytics",
         region="North America",
@@ -255,7 +261,7 @@ def risky_lead() -> LeadIntakeRequest:
     return LeadIntakeRequest(
         first_name="Test",
         last_name="User",
-        email=f"student.test+{TEST_RUN_ID}@example.com",
+        email=f"student.test.{TEST_RUN_ID}@example.com",
         company="Unknown Co",
         job_title="Student",
         company_size="unknown",
@@ -276,7 +282,7 @@ def failing_enrichment_lead() -> LeadIntakeRequest:
     return LeadIntakeRequest(
         first_name="Failure",
         last_name="Case",
-        email=f"failure.case+{TEST_RUN_ID}@example.com",
+        email=f"failure.case.{TEST_RUN_ID}@example.com",
         company="Failure Demo Co",
         job_title="VP of Sales",
         company_size="201-500",

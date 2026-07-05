@@ -5,6 +5,7 @@ from app.routers.ai import router as ai_router
 from app.routers.audit import router as audit_router
 from app.routers.crm import router as crm_router
 from app.routers.health import router as health_router
+from app.routers.hubspot import router as hubspot_router
 from app.routers.intake import router as intake_router
 from app.routers.logs import router as logs_router
 from app.routers.metrics import router as metrics_router
@@ -22,6 +23,7 @@ app.include_router(health_router)
 app.include_router(ai_router)
 app.include_router(intake_router)
 app.include_router(crm_router)
+app.include_router(hubspot_router)
 app.include_router(logs_router)
 app.include_router(metrics_router)
 app.include_router(audit_router)

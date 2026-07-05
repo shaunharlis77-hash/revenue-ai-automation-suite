@@ -14,9 +14,9 @@ from app.models.workflow_logs import (
     WorkflowRunSuccessRequest,
 )
 from app.services.audit_trail import create_audit_event
+from app.services.crm_adapter_factory import get_crm_adapter
 from app.services.lead_enrichment import enrich_lead
 from app.services.lead_scoring import _score_lead
-from app.services.mock_crm_adapter import create_or_update_lead_record
 from app.services.review_queue import create_review_item
 from app.services.workflow_logs import (
     mark_workflow_failure,
@@ -174,7 +174,8 @@ def intake_lead(request: LeadIntakeRequest) -> LeadIntakeResponse:
         )
 
         failed_step = "crm_adapter_write_failed"
-        crm_record = create_or_update_lead_record(
+        crm_adapter = get_crm_adapter()
+        crm_record = crm_adapter.create_or_update_lead_record(
             lead_id=lead_id,
             request=request,
             enrichment=enrichment,

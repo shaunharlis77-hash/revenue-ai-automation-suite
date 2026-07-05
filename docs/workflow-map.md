@@ -26,6 +26,45 @@ Each future workflow should follow a predictable pattern:
 6. Take the approved action.
 7. Log the result.
 
+## Non-Negotiable Audit And Observability Layer
+
+Every workflow, adapter, automation, and integration going forward must include both a business audit trail and operational observability. These are acceptance criteria, not optional future work.
+
+The business audit trail must capture:
+
+- Business event.
+- Workflow name.
+- Affected entity.
+- Decision or action taken.
+- Applied, blocked, skipped, failed, or recommended status.
+- Guardrail status.
+- Review requirement.
+- No secrets.
+
+Operational observability must capture:
+
+- Technical step name.
+- Step status.
+- Severity.
+- Error type.
+- Safe error message.
+- Retryable true or false.
+- Recommended fix.
+- Useful debug metadata.
+- No secrets.
+
+A workflow is not considered complete unless:
+
+- Functional behavior works.
+- Tests pass.
+- Audit events are written.
+- Operational step events are written.
+- Failures are diagnosed cleanly.
+- Human-review policy is explicit where relevant.
+- `docs/build-log.md` is updated.
+- `docs/workflow-map.md` is updated if routes, workflows, or entities changed.
+- `docs/interview-explanation.md` is updated if the demo story changed.
+
 ## Workflow 1: Lead Scoring and Routing
 
 ### What the workflow does
@@ -428,15 +467,31 @@ This layer is intentionally simple and internal. It does not add authentication 
 
 ## Mock CRM Adapter Layer
 
-The mock CRM adapter is the local boundary between workflow logic and CRM-style persistence.
+The CRM adapter layer is the boundary between workflow logic and CRM-style persistence.
 
-Lead Intake calls the adapter to create or update safe internal CRM records. The adapter records activity history, audit events, and operational step events so the system owner can see what was written, blocked, or failed.
+Lead Intake calls the selected adapter to create or update safe CRM records. In mock mode, the adapter writes only to local SQLite tables. In HubSpot mode, the adapter can sync safe fields to a HubSpot sandbox using a private app token from environment variables.
 
-This keeps workflow code from depending directly on a future HubSpot implementation. Later, a HubSpot adapter can be added behind the same boundary while preserving the safe-update policy:
+The adapter records activity history, audit events, and operational step events so the system owner can see what was written, blocked, synced, or failed.
+
+This keeps workflow code from depending directly on HubSpot implementation details. The same safe-update policy applies in both modes:
 
 - Clean safe updates can be applied.
 - High-priority updates can be applied with review visibility.
 - Risky or ambiguous updates are blocked pending review.
+
+HubSpot mode also tracks contact, company, deal, task, and note IDs, sync status, last sync time, and sync errors on the local CRM record so the admin UI can diagnose what happened.
+
+## HubSpot Sandbox Adapter Layer
+
+Phase 5 verified the optional HubSpot sandbox adapter behind the same CRM adapter boundary. Mock mode remains the default and local tests force mock mode when they are not explicitly testing HubSpot.
+
+HubSpot mode is enabled only through environment variables. The adapter can sync safe Lead Intake outputs to HubSpot contacts, companies, deals, internal tasks, and internal notes. It also syncs AI custom properties for lead score, priority, route, confidence, next action, human review requirement, workflow run id, and risk level.
+
+The adapter normalizes HubSpot standard fields before sync. Industry values are mapped to HubSpot-safe enum values, and company size ranges are mapped to integer employee counts for `numberofemployees`.
+
+Task payloads include required HubSpot task fields such as timestamp, subject, body, status, priority, and task type. Tasks and notes are useful activity records, but they are not part of the critical sync path. If optional activity creation fails, contact, company, and deal sync can still be preserved as a clean partial sync with audit and operational diagnostics.
+
+Only `scripts/smoke_test_hubspot_sandbox.py` intentionally writes to HubSpot. Mapping and configuration tests do not perform network calls. Tokens are never returned, printed, or logged.
 
 ## n8n Role
 

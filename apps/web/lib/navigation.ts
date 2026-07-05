@@ -2,6 +2,7 @@ export const navigationItems = [
   { label: "Overview", href: "/" },
   { label: "Lead Intake", href: "/lead-intake" },
   { label: "CRM Records", href: "/crm-records" },
+  { label: "HubSpot Status", href: "/hubspot-status" },
   { label: "Lead Scoring", href: "/lead-scoring" },
   { label: "Meeting Summaries", href: "/meeting-summaries" },
   { label: "Follow-Up Drafts", href: "/follow-up-drafts" },
