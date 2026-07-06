@@ -88,7 +88,7 @@ function AuditEventCard({ event }: { event: AuditEvent }) {
         </div>
         <div>
           <dt>Decision</dt>
-          <dd>{event.decision || "None"}</dd>
+          <dd>{formatDecision(event.decision)}</dd>
         </div>
         <div>
           <dt>Source</dt>
@@ -107,7 +107,7 @@ function AuditEventCard({ event }: { event: AuditEvent }) {
         </div>
       ) : null}
 
-      {event.decision_reason ? (
+      {isProfessionalDecisionNote(event.decision_reason) ? (
         <div className="reviewBlock">
           <p className="cardLabel">Decision reason</p>
           <p>{event.decision_reason}</p>
@@ -142,6 +142,39 @@ function eventTone(eventType: string) {
 
 function formatLabel(value: string) {
   return value.replaceAll("_", " ");
+}
+
+function formatDecision(value?: string | null) {
+  if (!value) {
+    return "None";
+  }
+
+  const normalized = value.toLowerCase();
+  if (normalized === "approved" || normalized === "approve") {
+    return "Approved";
+  }
+  if (normalized === "rejected" || normalized === "reject") {
+    return "Rejected";
+  }
+  return formatLabel(value);
+}
+
+function isProfessionalDecisionNote(value?: string | null) {
+  if (!value) {
+    return false;
+  }
+
+  const lowered = value.toLowerCase();
+  const blockedTerms = [
+    "demo",
+    "interview",
+    "seed",
+    "seeded",
+    "test",
+    "quality control",
+  ];
+
+  return !blockedTerms.some((term) => lowered.includes(term));
 }
 
 function formatDate(value: string) {

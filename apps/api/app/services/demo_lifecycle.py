@@ -334,7 +334,7 @@ def run_full_demo_story(reset_demo: bool = False) -> FullDemoStoryResponse:
         follow_up_review.review_item_id,
         ReviewDecisionRequest(
             actor="sales_manager",
-            decision_reason="Approved for demo after rep review. Do not auto-send.",
+            decision_reason="Approved after rep review. Do not auto-send.",
         ),
     )
     outcome = capture_follow_up_outcome(
@@ -375,7 +375,7 @@ def run_full_demo_story(reset_demo: bool = False) -> FullDemoStoryResponse:
         proposal_review.review_item_id,
         ReviewDecisionRequest(
             actor="sales_manager",
-            decision_reason="Approved internal outline for demo package discussion.",
+            decision_reason="Approved internal outline for package discussion.",
         ),
     )
     proposal_activity = append_crm_activity(

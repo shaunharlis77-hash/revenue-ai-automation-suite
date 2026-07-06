@@ -164,10 +164,12 @@ function ReviewItemCard({ item }: { item: ReviewItem }) {
           </form>
         </div>
       ) : (
-        <p className="decisionText">
-          Decision: {item.decision || item.status}
-          {item.decision_reason ? ` / ${item.decision_reason}` : ""}
-        </p>
+        <div className="decisionText">
+          <p>Decision: {formatDecision(item.decision || item.status)}</p>
+          {isProfessionalDecisionNote(item.decision_reason) ? (
+            <p>Decision notes: {item.decision_reason}</p>
+          ) : null}
+        </div>
       )}
     </article>
   );
@@ -183,7 +185,7 @@ async function approveReviewItem(formData: FormData) {
     await decideReviewItem(
       reviewItemId,
       "approve",
-      "Approved from Review Queue UI.",
+      "Approved after manager review.",
     );
   } catch (error) {
     target = `/review-queue?error=${encodeURIComponent(errorMessage(error))}`;
@@ -202,7 +204,7 @@ async function rejectReviewItem(formData: FormData) {
     await decideReviewItem(
       reviewItemId,
       "reject",
-      "Rejected from Review Queue UI.",
+      "Rejected because proposed action needs revision.",
     );
   } catch (error) {
     target = `/review-queue?error=${encodeURIComponent(errorMessage(error))}`;
@@ -233,6 +235,35 @@ function riskTone(riskLevel: string) {
 
 function formatLabel(value: string) {
   return value.replaceAll("_", " ");
+}
+
+function formatDecision(value: string) {
+  const normalized = value.toLowerCase();
+  if (normalized === "approved" || normalized === "approve") {
+    return "Approved";
+  }
+  if (normalized === "rejected" || normalized === "reject") {
+    return "Rejected";
+  }
+  return "Pending";
+}
+
+function isProfessionalDecisionNote(value?: string | null) {
+  if (!value) {
+    return false;
+  }
+
+  const lowered = value.toLowerCase();
+  const blockedTerms = [
+    "demo",
+    "interview",
+    "seed",
+    "seeded",
+    "test",
+    "quality control",
+  ];
+
+  return !blockedTerms.some((term) => lowered.includes(term));
 }
 
 function formatDate(value: string) {

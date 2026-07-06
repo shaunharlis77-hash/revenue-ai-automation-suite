@@ -440,16 +440,16 @@ def decide_some_reviews() -> None:
         approve_review_item(
             item.review_item_id,
             ReviewDecisionRequest(
-                actor="demo_sales_manager",
-                decision_reason="Approved for interview demo history.",
+                actor="sales_manager",
+                decision_reason="Approved after manager review.",
             ),
         )
     for item in list_review_items()[6:10]:
         reject_review_item(
             item.review_item_id,
             ReviewDecisionRequest(
-                actor="demo_sales_manager",
-                decision_reason="Rejected to show review quality control.",
+                actor="sales_manager",
+                decision_reason="Rejected because proposed action needs revision.",
             ),
         )
 

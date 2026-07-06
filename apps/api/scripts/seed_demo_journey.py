@@ -335,7 +335,7 @@ def apply_demo_review_decisions(follow_up_run_id: str, proposal_run_id: str) -> 
             follow_up_item.review_item_id,
             ReviewDecisionRequest(
                 actor="sales_manager",
-                decision_reason="Demo approval: draft is accurate for rep review.",
+                decision_reason="Approved because the draft is accurate for rep review.",
             ),
         )
 
@@ -345,7 +345,7 @@ def apply_demo_review_decisions(follow_up_run_id: str, proposal_run_id: str) -> 
             ReviewDecisionRequest(
                 actor="sales_manager",
                 decision_reason=(
-                    "Demo rejection: package outline needs pricing language cleaned up "
+                    "Rejected because package outline needs pricing language cleaned up "
                     "before customer use."
                 ),
             ),

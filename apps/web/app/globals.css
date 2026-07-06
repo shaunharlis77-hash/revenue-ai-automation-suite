@@ -1060,6 +1060,10 @@ h1 {
   line-height: 1.5;
 }
 
+.decisionText p {
+  margin: 0;
+}
+
 .notice {
   padding: 12px 14px;
   border-radius: 8px;
