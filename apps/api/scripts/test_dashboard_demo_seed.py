@@ -129,6 +129,7 @@ def check_dashboards(client: TestClient) -> None:
     assert sales["sales_overview"]["follow_ups_drafted"] >= 1
     assert sales["sales_overview"]["proposals_recommended"] >= 1
     assert sales["ai_impact"]["estimated_time_saved_minutes"] > 0
+    check_review_required_metric(sales)
     assert sales["drop_off_zone_stats"]["total_drop_off_signals"] > 0
     assert admin["system_status"]["total_workflow_runs"] > 0
     assert admin["review_queue_health"]["pending"] >= 1
@@ -140,6 +141,19 @@ def check_mock_mode(client: TestClient) -> None:
     data = client.get("/metrics/admin-dashboard").json()
     assert data["system_status"]["adapter_mode"] == "mock"
     assert data["system_status"]["hubspot_enabled"] is False
+
+
+def check_review_required_metric(sales: dict) -> None:
+    review_required = sales["ai_impact"]["human_review_required_count"]
+    pending_reviews = sales["sales_overview"]["open_review_items_affecting_sales"]
+    review_item_count = len(list_review_items())
+    raw_review_required_audit_events = sum(
+        1 for event in list_audit_events() if event.human_review_required
+    )
+
+    assert review_required >= pending_reviews
+    assert review_required <= review_item_count + 5
+    assert review_required < raw_review_required_audit_events
 
 
 def check_no_secrets(client: TestClient) -> None:

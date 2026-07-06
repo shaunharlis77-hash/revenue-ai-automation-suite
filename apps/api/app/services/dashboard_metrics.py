@@ -365,9 +365,7 @@ def build_ai_impact(data: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
     audit_events = data["audit_events"]
     time_saved = estimate_time_saved_minutes(data)
     safe_count = count_crm_updates_applied(records)
-    human_review_count = sum(
-        1 for event in audit_events if bool(event.get("human_review_required"))
-    )
+    human_review_count = count_distinct_review_required_actions(review_items, audit_events)
     blocked_count = count_events(
         audit_events,
         {"crm_update_blocked", "hubspot_sync_blocked", "crm_adapter_write_blocked"},
@@ -702,6 +700,52 @@ def count_events(events: list[dict[str, Any]], event_types: set[str]) -> int:
     return sum(1 for event in events if event.get("event_type") in event_types)
 
 
+def count_distinct_review_required_actions(
+    review_items: list[dict[str, Any]], audit_events: list[dict[str, Any]]
+) -> int:
+    review_item_ids = {
+        str(item.get("review_item_id"))
+        for item in review_items
+        if item.get("review_item_id")
+    }
+    review_entity_workflows = {
+        (str(item.get("entity_id") or ""), str(item.get("workflow_name") or ""))
+        for item in review_items
+    }
+    fallback_action_keys: set[str] = set()
+
+    for event in audit_events:
+        if not bool(event.get("human_review_required")):
+            continue
+
+        metadata = json_dict(event.get("metadata_json"))
+        review_item_id = metadata.get("review_item_id")
+        if review_item_id:
+            review_item_ids.add(str(review_item_id))
+            continue
+
+        entity_id = str(
+            event.get("entity_id")
+            or metadata.get("crm_record_id")
+            or event.get("output_reference")
+            or "unknown_entity"
+        )
+        workflow_name = str(event.get("workflow_name") or "unknown_workflow")
+        if (entity_id, workflow_name) in review_entity_workflows:
+            continue
+
+        action_type = str(
+            metadata.get("business_action")
+            or metadata.get("review_type")
+            or event.get("event_type")
+            or "review_required"
+        )
+        crm_record_id = str(metadata.get("crm_record_id") or entity_id)
+        fallback_action_keys.add(f"{crm_record_id}:{workflow_name}:{action_type}")
+
+    return len(review_item_ids) + len(fallback_action_keys)
+
+
 def count_risky_records(records: list[dict[str, Any]]) -> int:
     return sum(1 for record in records if record_risk_flags(record))
 
@@ -724,6 +768,18 @@ def json_list(value: Any) -> list[Any]:
         except Exception:
             return []
     return []
+
+
+def json_dict(value: Any) -> dict[str, Any]:
+    if isinstance(value, dict):
+        return value
+    if isinstance(value, str):
+        try:
+            decoded = decode_json(value, {})
+            return decoded if isinstance(decoded, dict) else {}
+        except Exception:
+            return {}
+    return {}
 
 
 def missing_or_unclear(value: Any) -> bool:

@@ -104,10 +104,24 @@ def check_persisted_usage(client: TestClient) -> None:
             metadata_json={"test_case": "sales_manager_dashboard_metrics"},
         )
     )
+    create_audit_event(
+        AuditEventCreate(
+            workflow_run_id=run.workflow_run_id,
+            workflow_name="follow_up_drafting",
+            entity_type="follow_up",
+            entity_id="follow_up_metrics_001",
+            event_type="follow_up_draft_created",
+            event_source="test",
+            actor="test_runner",
+            human_review_required=True,
+            metadata_json={"test_case": "sales_manager_dashboard_metrics"},
+        )
+    )
 
     data = client.get("/metrics/sales-manager-dashboard").json()
     adoption = data["team_activity_and_ai_adoption"]
     impact = data["ai_impact"]
+    raw_review_required_events = 2
 
     assert adoption["ai_assisted_workflows_used"] >= 1
     assert adoption["adoption_rate_percent"] > 0
@@ -115,6 +129,8 @@ def check_persisted_usage(client: TestClient) -> None:
     assert impact["estimated_time_saved_minutes"] >= 8
     assert "estimation_method" in impact
     assert data["sales_overview"]["follow_ups_drafted"] >= 1
+    assert impact["human_review_required_count"] == 1
+    assert impact["human_review_required_count"] != raw_review_required_events
 
 
 def check_no_secret(client: TestClient) -> None:
