@@ -118,7 +118,7 @@ function CRMRecordCard({
         </div>
         <div className="badgeRow">
           <StatusMiniBadge value={record.crm_update_status} />
-          <HubSpotSyncBadge value={record.hubspot_sync_status} />
+          <HubSpotSyncBadge record={record} />
           <PriorityBadge value={record.priority} />
         </div>
       </div>
@@ -154,8 +154,8 @@ function CRMRecordDetail({
         </div>
         <div className="badgeRow">
           <StatusMiniBadge value={record.crm_update_status} />
-          <span className="miniBadge badge-crm">{formatLabel(record.adapter_mode)} mode</span>
-          <HubSpotSyncBadge value={record.hubspot_sync_status} />
+          <span className="miniBadge badge-crm">{adapterDisplayLabel(record)}</span>
+          <HubSpotSyncBadge record={record} />
           {record.human_review_required ? (
             <span className="miniBadge badge-review">review required</span>
           ) : (
@@ -203,8 +203,8 @@ function CRMRecordDetail({
       <div className="reviewBlock">
         <p className="cardLabel">HubSpot sync</p>
         <dl className="reviewDetails crmRecordSummary">
-          <Detail label="Adapter mode" value={formatLabel(record.adapter_mode)} />
-          <Detail label="Sync status" value={formatLabel(record.hubspot_sync_status)} />
+          <Detail label="Adapter" value={adapterDisplayLabel(record)} />
+          <Detail label="Sync status" value={hubspotSyncDisplayLabel(record)} />
           <Detail label="Contact ID" value={record.hubspot_contact_id || "Not set"} />
           <Detail label="Company ID" value={record.hubspot_company_id || "Not set"} />
           <Detail label="Deal ID" value={record.hubspot_deal_id || "Not set"} />
@@ -268,8 +268,12 @@ function PriorityBadge({ value }: { value: string }) {
   return <span className={`miniBadge ${tone}`}>{formatLabel(value)}</span>;
 }
 
-function HubSpotSyncBadge({ value }: { value: CRMLeadRecord["hubspot_sync_status"] }) {
-  return <span className={`miniBadge ${hubspotSyncTone(value)}`}>{formatLabel(value)}</span>;
+function HubSpotSyncBadge({ record }: { record: CRMLeadRecord }) {
+  return (
+    <span className={`miniBadge ${hubspotSyncTone(record)}`}>
+      {hubspotSyncDisplayLabel(record)}
+    </span>
+  );
 }
 
 function Detail({ label, value }: { label: string; value: string }) {
@@ -301,17 +305,69 @@ function activityTone(status: CRMActivity["activity_status"]) {
   return "badge-crm";
 }
 
-function hubspotSyncTone(status: CRMLeadRecord["hubspot_sync_status"]) {
+function hubspotSyncTone(record: CRMLeadRecord) {
+  const status = record.hubspot_sync_status;
+  if (isLocalCRMRecord(record)) {
+    return "badge-crm";
+  }
   if (status === "failed" || status === "blocked_pending_review") {
     return "event-danger";
   }
-  if (status === "synced") {
+  if (status === "synced" && hasHubSpotObjectIds(record)) {
     return "event-success";
   }
   if (status === "partial_sync") {
     return "event-warning";
   }
   return "badge-crm";
+}
+
+function hubspotSyncDisplayLabel(record: CRMLeadRecord) {
+  const status = record.hubspot_sync_status;
+
+  if (isLocalCRMRecord(record)) {
+    return "Local CRM Record";
+  }
+  if (status === "synced" && hasHubSpotObjectIds(record)) {
+    return "Synced";
+  }
+  if (status === "synced") {
+    return "Sync Pending Verification";
+  }
+  if (status === "partial_sync") {
+    return "Partial Sync";
+  }
+  if (status === "failed") {
+    return "Sync Failed";
+  }
+  if (status === "blocked_pending_review") {
+    return "Blocked Pending Review";
+  }
+  if (status === "not_enabled") {
+    return "Local CRM Record";
+  }
+
+  return formatLabel(status);
+}
+
+function adapterDisplayLabel(record: CRMLeadRecord) {
+  return isLocalCRMRecord(record) ? "Local CRM Adapter" : "HubSpot Adapter";
+}
+
+function isLocalCRMRecord(record: CRMLeadRecord) {
+  const status = record.hubspot_sync_status.toLowerCase();
+  return (
+    record.adapter_mode === "mock" ||
+    status === "skipped_mock_mode" ||
+    status.includes("mock mode skipped") ||
+    status.includes("skipped because mock mode")
+  );
+}
+
+function hasHubSpotObjectIds(record: CRMLeadRecord) {
+  return Boolean(
+    record.hubspot_contact_id || record.hubspot_company_id || record.hubspot_deal_id,
+  );
 }
 
 function formatLabel(value: string) {
