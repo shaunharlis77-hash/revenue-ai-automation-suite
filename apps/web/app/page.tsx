@@ -40,9 +40,12 @@ export default function OverviewPage() {
         <div className="card detailPanel">
           <p className="cardLabel">Current Boundary</p>
           <p>
-            The suite does not add authentication, n8n, LangGraph, or LLM calls
-            yet. HubSpot remains sandbox/env controlled, and every workflow must
-            keep audit trail plus operational observability.
+            This demo runs as a local AI operating layer with HubSpot sandbox
+            integration and n8n orchestration. Authentication, role-based access
+            control, production deployment, queue-based retries, and Postgres
+            persistence would be the next production hardening steps. Every
+            workflow must keep audit trail coverage, operational observability,
+            and human review for risky or customer-facing actions.
           </p>
         </div>
       </section>

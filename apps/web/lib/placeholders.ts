@@ -11,8 +11,8 @@ export const overviewMetrics = [
   },
   {
     label: "CRM adapter",
-    value: "Mock/HubSpot",
-    note: "Mock remains safe by default; HubSpot sandbox is env controlled.",
+    value: "Local / HubSpot",
+    note: "Local mode remains safe by default; HubSpot sandbox is environment-controlled.",
   },
   {
     label: "Guardrails",
